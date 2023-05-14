@@ -25,3 +25,17 @@ body {
     )
     rgb(var(--background-start-rgb));
 }
+
+@layer base {
+  h1 {
+    @apply font-bold text-[10rem] m-0 p-0 font-anton tracking-widest;
+  }
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply mt-0 mb-0;
+  }
+}
