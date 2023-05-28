@@ -1,7 +1,7 @@
 /* eslint-disable react/no-unescaped-entities */
 import Link from "next/link";
 
-export default function SignIn() {
+export default function Index() {
   return (
     <main className="flex w-screen h-screen bg-[#333332]">
       <div className="bg-[#595757] w-[50%] flex items-center justify-center">
@@ -11,11 +11,11 @@ export default function SignIn() {
         <h5 className="absolute right-0 m-4">
           Don't have an account?{" "}
           <span className="text-[#595757] hover:text-[#adadad] cursor-pointer">
-            <Link href="/signup"> Sign Up </Link>
+            <Link href="/signin"> Sign In </Link>
           </span>
         </h5>
         <div className="w-[60%] m-auto">
-          <h2 className="text-6xl text-center">Sign In</h2>
+          <h2 className="text-6xl text-center">Sign Up</h2>
           <form className="flex flex-col mt-10">
             <label className="mb-2">Email</label>
             <input
@@ -23,10 +23,15 @@ export default function SignIn() {
               className="w-[70%] h-[2rem] pl-2 mb-5 rounded"
             />
             <label className="mb-2">Password</label>
+            <input
+              type="password"
+              className="w-[70%] h-[2rem] pl-2  mb-5 rounded"
+            />
+            <label className="mb-2">Confirm Password</label>
             <input type="password" className="w-[70%] h-[2rem] pl-2 rounded" />
             <div className="mt-10">
               <button className="bg-[#747976] px-5 py-1 rounded">
-                Sign In
+                Sign Up
               </button>
             </div>
           </form>
