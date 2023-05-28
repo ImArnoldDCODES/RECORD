@@ -39,5 +39,8 @@ body {
   h1 {
     @apply font-bold text-[10rem] m-0 p-0 font-anton tracking-widest;
   }
+  input {
+    @apply bg-[#D9D9D9] text-black
+  }
 }
 
