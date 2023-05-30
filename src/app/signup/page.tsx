@@ -9,7 +9,7 @@ export default function Index() {
       </div>
       <div className="w-[50%] flex">
         <h5 className="absolute right-0 m-4">
-          Don't have an account?{" "}
+          Don't have an account?
           <span className="text-[#595757] hover:text-[#adadad] cursor-pointer">
             <Link href="/signin"> Sign In </Link>
           </span>
