@@ -1330,7 +1330,7 @@ _export(exports, {
         return canSegmentBeOverridden;
     }
 });
-const _getsegmentparam = __webpack_require__(1090);
+const _getsegmentparam = __webpack_require__(5232);
 const matchSegment = (existingSegment, segment)=>{
     // Common case: segment is just a string
     if (typeof existingSegment === "string" && typeof segment === "string") {
@@ -2380,7 +2380,15 @@ async function fetchServerResponse(url, flightRouterState, nextUrl, prefetchKind
     try {
         let fetchUrl = url;
         if (true) {
-            if (false) {}
+            if (true) {
+                fetchUrl = new URL(url) // clone
+                ;
+                if (fetchUrl.pathname.endsWith("/")) {
+                    fetchUrl.pathname += "index.txt";
+                } else {
+                    fetchUrl.pathname += ".txt";
+                }
+            }
         }
         const res = await fetch(fetchUrl, {
             // Backwards compat for older browsers. `same-origin` is the default in modern browsers.
@@ -2391,7 +2399,11 @@ async function fetchServerResponse(url, flightRouterState, nextUrl, prefetchKind
         const contentType = res.headers.get("content-type") || "";
         let isFlightResponse = contentType === _approuterheaders.RSC_CONTENT_TYPE_HEADER;
         if (true) {
-            if (false) {}
+            if (true) {
+                if (!isFlightResponse) {
+                    isFlightResponse = contentType.startsWith("text/plain");
+                }
+            }
         }
         // If fetch returns something different than flight response handle it like a mpa navigation
         if (!isFlightResponse) {
