@@ -53,13 +53,13 @@ function _interop_require_default(obj) {
     };
 }
 const prefixes = {
-    wait: "- " + _chalk.default.cyan("wait"),
-    error: "- " + _chalk.default.red("error"),
-    warn: "- " + _chalk.default.yellow("warn"),
-    ready: "- " + _chalk.default.green("ready"),
-    info: "- " + _chalk.default.cyan("info"),
-    event: "- " + _chalk.default.magenta("event"),
-    trace: "- " + _chalk.default.magenta("trace")
+    wait: _chalk.default.cyan("wait") + "  -",
+    error: _chalk.default.red("error") + " -",
+    warn: _chalk.default.yellow("warn") + "  -",
+    ready: _chalk.default.green("ready") + " -",
+    info: _chalk.default.cyan("info") + "  -",
+    event: _chalk.default.magenta("event") + " -",
+    trace: _chalk.default.magenta("trace") + " -"
 };
 function wait(...message) {
     console.log(prefixes.wait, ...message);
@@ -166,51 +166,6 @@ if ((typeof exports.default === "function" || typeof exports.default === "object
 
 /***/ }),
 
-/***/ 6337:
-/***/ ((module, exports, __webpack_require__) => {
-
-
-Object.defineProperty(exports, "__esModule", ({
-    value: true
-}));
-Object.defineProperty(exports, "DraftMode", ({
-    enumerable: true,
-    get: function() {
-        return DraftMode;
-    }
-}));
-const _staticgenerationbailout = __webpack_require__(9282);
-class DraftMode {
-    get isEnabled() {
-        return this._provider.isEnabled;
-    }
-    enable() {
-        if ((0, _staticgenerationbailout.staticGenerationBailout)("draftMode().enable()")) {
-            return;
-        }
-        return this._provider.enable();
-    }
-    disable() {
-        if ((0, _staticgenerationbailout.staticGenerationBailout)("draftMode().disable()")) {
-            return;
-        }
-        return this._provider.disable();
-    }
-    constructor(provider){
-        this._provider = provider;
-    }
-}
-if ((typeof exports.default === "function" || typeof exports.default === "object" && exports.default !== null) && typeof exports.default.__esModule === "undefined") {
-    Object.defineProperty(exports.default, "__esModule", {
-        value: true
-    });
-    Object.assign(exports.default, exports);
-    module.exports = exports.default;
-} //# sourceMappingURL=draft-mode.js.map
-
-
-/***/ }),
-
 /***/ 904:
 /***/ ((module, exports, __webpack_require__) => {
 
@@ -229,20 +184,19 @@ _export(exports, {
     headers: function() {
         return headers;
     },
+    previewData: function() {
+        return previewData;
+    },
     cookies: function() {
         return cookies;
-    },
-    draftMode: function() {
-        return draftMode;
     }
 });
 const _requestcookies = __webpack_require__(127);
 const _headers = __webpack_require__(1778);
 const _cookies = __webpack_require__(8306);
-const _requestasyncstorage = __webpack_require__(8214);
-const _actionasyncstorage = __webpack_require__(7797);
+const _requestasyncstorage = __webpack_require__(5120);
+const _actionasyncstorage = __webpack_require__(5220);
 const _staticgenerationbailout = __webpack_require__(9282);
-const _draftmode = __webpack_require__(6337);
 function headers() {
     if ((0, _staticgenerationbailout.staticGenerationBailout)("headers")) {
         return _headers.HeadersAdapter.seal(new Headers({}));
@@ -252,6 +206,13 @@ function headers() {
         throw new Error("Invariant: Method expects to have requestAsyncStorage, none available");
     }
     return requestStore.headers;
+}
+function previewData() {
+    const requestStore = _requestasyncstorage.requestAsyncStorage.getStore();
+    if (!requestStore) {
+        throw new Error("Invariant: Method expects to have requestAsyncStorage, none available");
+    }
+    return requestStore.previewData;
 }
 function cookies() {
     if ((0, _staticgenerationbailout.staticGenerationBailout)("cookies")) {
@@ -268,13 +229,6 @@ function cookies() {
         return requestStore.mutableCookies;
     }
     return requestStore.cookies;
-}
-function draftMode() {
-    const requestStore = _requestasyncstorage.requestAsyncStorage.getStore();
-    if (!requestStore) {
-        throw new Error("Invariant: Method expects to have requestAsyncStorage, none available");
-    }
-    return new _draftmode.DraftMode(requestStore.draftMode);
 }
 if ((typeof exports.default === "function" || typeof exports.default === "object" && exports.default !== null) && typeof exports.default.__esModule === "undefined") {
     Object.defineProperty(exports.default, "__esModule", {
@@ -345,12 +299,6 @@ function _export(target, all) {
     });
 }
 _export(exports, {
-    RedirectType: function() {
-        return RedirectType;
-    },
-    getRedirectError: function() {
-        return getRedirectError;
-    },
     redirect: function() {
         return redirect;
     },
@@ -359,43 +307,23 @@ _export(exports, {
     },
     getURLFromRedirectError: function() {
         return getURLFromRedirectError;
-    },
-    getRedirectTypeFromError: function() {
-        return getRedirectTypeFromError;
     }
 });
 const REDIRECT_ERROR_CODE = "NEXT_REDIRECT";
-var RedirectType;
-(function(RedirectType) {
-    RedirectType["push"] = "push";
-    RedirectType["replace"] = "replace";
-})(RedirectType || (RedirectType = {}));
-function getRedirectError(url, type) {
+function redirect(url) {
     // eslint-disable-next-line no-throw-literal
     const error = new Error(REDIRECT_ERROR_CODE);
-    error.digest = REDIRECT_ERROR_CODE + ";" + type + ";" + url;
-    return error;
-}
-function redirect(url, type) {
-    if (type === void 0) type = "replace";
-    throw getRedirectError(url, type);
+    error.digest = REDIRECT_ERROR_CODE + ";" + url;
+    throw error;
 }
 function isRedirectError(error) {
-    if (typeof (error == null ? void 0 : error.digest) !== "string") return false;
-    const [errorCode, type, destination] = error.digest.split(";", 3);
-    return errorCode === REDIRECT_ERROR_CODE && (type === "replace" || type === "push") && typeof destination === "string";
+    return typeof (error == null ? void 0 : error.digest) === "string" && error.digest.startsWith(REDIRECT_ERROR_CODE + ";") && error.digest.length > REDIRECT_ERROR_CODE.length + 1;
 }
 function getURLFromRedirectError(error) {
     if (!isRedirectError(error)) return null;
     // Slices off the beginning of the digest that contains the code and the
     // separating ';'.
-    return error.digest.split(";", 3)[2];
-}
-function getRedirectTypeFromError(error) {
-    if (!isRedirectError(error)) {
-        throw new Error("Not a redirect error");
-    }
-    return error.digest.split(";", 3)[1];
+    return error.digest.slice(REDIRECT_ERROR_CODE.length + 1);
 }
 if ((typeof exports.default === "function" || typeof exports.default === "object" && exports.default !== null) && typeof exports.default.__esModule === "undefined") {
     Object.defineProperty(exports.default, "__esModule", {
@@ -1920,6 +1848,63 @@ const _default = chalk; //# sourceMappingURL=chalk.js.map
 
 /***/ }),
 
+/***/ 1051:
+/***/ ((__unused_webpack_module, exports) => {
+
+
+Object.defineProperty(exports, "__esModule", ({
+    value: true
+}));
+Object.defineProperty(exports, "interopDefault", ({
+    enumerable: true,
+    get: function() {
+        return interopDefault;
+    }
+}));
+function interopDefault(mod) {
+    return mod.default || mod;
+} //# sourceMappingURL=interop-default.js.map
+
+
+/***/ }),
+
+/***/ 5887:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+
+Object.defineProperty(exports, "__esModule", ({
+    value: true
+}));
+0 && (0);
+function _export(target, all) {
+    for(var name in all)Object.defineProperty(target, name, {
+        enumerable: true,
+        get: all[name]
+    });
+}
+_export(exports, {
+    default: function() {
+        return isError;
+    },
+    getProperError: function() {
+        return getProperError;
+    }
+});
+const _isplainobject = __webpack_require__(4346);
+function isError(err) {
+    return typeof err === "object" && err !== null && "name" in err && "message" in err;
+}
+function getProperError(err) {
+    if (isError(err)) {
+        return err;
+    }
+    if (false) {}
+    return new Error((0, _isplainobject.isPlainObject)(err) ? JSON.stringify(err) : err + "");
+} //# sourceMappingURL=is-error.js.map
+
+
+/***/ }),
+
 /***/ 6593:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
@@ -2107,59 +2092,459 @@ function setLazyProp({ req  }, prop, getter) {
 
 /***/ }),
 
-/***/ 2484:
+/***/ 712:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({
     value: true
 }));
-Object.defineProperty(exports, "DraftModeProvider", ({
-    enumerable: true,
-    get: function() {
-        return DraftModeProvider;
+0 && (0);
+function _export(target, all) {
+    for(var name in all)Object.defineProperty(target, name, {
+        enumerable: true,
+        get: all[name]
+    });
+}
+_export(exports, {
+    tryGetPreviewData: function() {
+        return tryGetPreviewData;
+    },
+    parseBody: function() {
+        return parseBody;
+    },
+    apiResolver: function() {
+        return apiResolver;
     }
-}));
-const _apiutils = __webpack_require__(6593);
-class DraftModeProvider {
-    constructor(previewProps, req, cookies, mutableCookies){
-        var _cookies_get;
-        // The logic for draftMode() is very similar to tryGetPreviewData()
-        // but Draft Mode does not have any data associated with it.
-        const isOnDemandRevalidate = previewProps && (0, _apiutils.checkIsOnDemandRevalidate)(req, previewProps).isOnDemandRevalidate;
-        const cookieValue = (_cookies_get = cookies.get(_apiutils.COOKIE_NAME_PRERENDER_BYPASS)) == null ? void 0 : _cookies_get.value;
-        this.isEnabled = Boolean(!isOnDemandRevalidate && cookieValue && previewProps && cookieValue === previewProps.previewModeId);
-        this._previewModeId = previewProps == null ? void 0 : previewProps.previewModeId;
-        this._mutableCookies = mutableCookies;
+});
+const _ = __webpack_require__(6593);
+const _bytes = /*#__PURE__*/ _interop_require_default(__webpack_require__(5547));
+const _etag = __webpack_require__(8312);
+const _sendpayload = __webpack_require__(9881);
+const _stream = __webpack_require__(2781);
+const _contenttype = __webpack_require__(4929);
+const _iserror = /*#__PURE__*/ _interop_require_default(__webpack_require__(5887));
+const _utils = __webpack_require__(8281);
+const _interopdefault = __webpack_require__(1051);
+const _index = __webpack_require__(6593);
+const _mockrequest = __webpack_require__(2398);
+const _tracer = __webpack_require__(6730);
+const _constants = __webpack_require__(5511);
+const _cookies = __webpack_require__(8306);
+const _headers = __webpack_require__(1778);
+const _constants1 = __webpack_require__(2523);
+function _interop_require_default(obj) {
+    return obj && obj.__esModule ? obj : {
+        default: obj
+    };
+}
+function tryGetPreviewData(req, res, options) {
+    var _cookies_get, _cookies_get1;
+    // if an On-Demand revalidation is being done preview mode
+    // is disabled
+    if (options && (0, _.checkIsOnDemandRevalidate)(req, options).isOnDemandRevalidate) {
+        return false;
     }
-    enable() {
-        if (!this._previewModeId) {
-            throw new Error("Invariant: previewProps missing previewModeId this should never happen");
-        }
-        this._mutableCookies.set({
-            name: _apiutils.COOKIE_NAME_PRERENDER_BYPASS,
-            value: this._previewModeId,
-            httpOnly: true,
-            sameSite:  true ? "none" : 0,
-            secure: "production" !== "development",
-            path: "/"
+    // Read cached preview data if present
+    // TODO: use request metadata instead of a symbol
+    if (_index.SYMBOL_PREVIEW_DATA in req) {
+        return req[_index.SYMBOL_PREVIEW_DATA];
+    }
+    const headers = _headers.HeadersAdapter.from(req.headers);
+    const cookies = new _cookies.RequestCookies(headers);
+    const previewModeId = (_cookies_get = cookies.get(_index.COOKIE_NAME_PRERENDER_BYPASS)) == null ? void 0 : _cookies_get.value;
+    const tokenPreviewData = (_cookies_get1 = cookies.get(_index.COOKIE_NAME_PRERENDER_DATA)) == null ? void 0 : _cookies_get1.value;
+    // Case: preview mode cookie set but data cookie is not set
+    if (previewModeId && !tokenPreviewData && previewModeId === options.previewModeId) {
+        // This is "Draft Mode" which doesn't use
+        // previewData, so we return an empty object
+        // for backwards compat with "Preview Mode".
+        const data = {};
+        Object.defineProperty(req, _index.SYMBOL_PREVIEW_DATA, {
+            value: data,
+            enumerable: false
         });
+        return data;
     }
-    disable() {
-        // To delete a cookie, set `expires` to a date in the past:
-        // https://tools.ietf.org/html/rfc6265#section-4.1.1
-        // `Max-Age: 0` is not valid, thus ignored, and the cookie is persisted.
-        this._mutableCookies.set({
-            name: _apiutils.COOKIE_NAME_PRERENDER_BYPASS,
-            value: "",
+    // Case: neither cookie is set.
+    if (!previewModeId && !tokenPreviewData) {
+        return false;
+    }
+    // Case: one cookie is set, but not the other.
+    if (!previewModeId || !tokenPreviewData) {
+        (0, _index.clearPreviewData)(res);
+        return false;
+    }
+    // Case: preview session is for an old build.
+    if (previewModeId !== options.previewModeId) {
+        (0, _index.clearPreviewData)(res);
+        return false;
+    }
+    let encryptedPreviewData;
+    try {
+        const jsonwebtoken = __webpack_require__(5644);
+        encryptedPreviewData = jsonwebtoken.verify(tokenPreviewData, options.previewModeSigningKey);
+    } catch  {
+        // TODO: warn
+        (0, _index.clearPreviewData)(res);
+        return false;
+    }
+    const { decryptWithSecret  } = __webpack_require__(7176);
+    const decryptedPreviewData = decryptWithSecret(Buffer.from(options.previewModeEncryptionKey), encryptedPreviewData.data);
+    try {
+        // TODO: strict runtime type checking
+        const data = JSON.parse(decryptedPreviewData);
+        // Cache lookup
+        Object.defineProperty(req, _index.SYMBOL_PREVIEW_DATA, {
+            value: data,
+            enumerable: false
+        });
+        return data;
+    } catch  {
+        return false;
+    }
+}
+/**
+ * Parse `JSON` and handles invalid `JSON` strings
+ * @param str `JSON` string
+ */ function parseJson(str) {
+    if (str.length === 0) {
+        // special-case empty json body, as it's a common client-side mistake
+        return {};
+    }
+    try {
+        return JSON.parse(str);
+    } catch (e) {
+        throw new _index.ApiError(400, "Invalid JSON");
+    }
+}
+async function parseBody(req, limit) {
+    let contentType;
+    try {
+        contentType = (0, _contenttype.parse)(req.headers["content-type"] || "text/plain");
+    } catch  {
+        contentType = (0, _contenttype.parse)("text/plain");
+    }
+    const { type , parameters  } = contentType;
+    const encoding = parameters.charset || "utf-8";
+    let buffer;
+    try {
+        const getRawBody = __webpack_require__(7798);
+        buffer = await getRawBody(req, {
+            encoding,
+            limit
+        });
+    } catch (e) {
+        if ((0, _iserror.default)(e) && e.type === "entity.too.large") {
+            throw new _index.ApiError(413, `Body exceeded ${limit} limit`);
+        } else {
+            throw new _index.ApiError(400, "Invalid body");
+        }
+    }
+    const body = buffer.toString();
+    if (type === "application/json" || type === "application/ld+json") {
+        return parseJson(body);
+    } else if (type === "application/x-www-form-urlencoded") {
+        const qs = __webpack_require__(3477);
+        return qs.decode(body);
+    } else {
+        return body;
+    }
+}
+function getMaxContentLength(responseLimit) {
+    if (responseLimit && typeof responseLimit !== "boolean") {
+        return _bytes.default.parse(responseLimit);
+    }
+    return _index.RESPONSE_LIMIT_DEFAULT;
+}
+/**
+ * Send `any` body to response
+ * @param req request object
+ * @param res response object
+ * @param body of response
+ */ function sendData(req, res, body) {
+    if (body === null || body === undefined) {
+        res.end();
+        return;
+    }
+    // strip irrelevant headers/body
+    if (res.statusCode === 204 || res.statusCode === 304) {
+        res.removeHeader("Content-Type");
+        res.removeHeader("Content-Length");
+        res.removeHeader("Transfer-Encoding");
+        if (false) {}
+        res.end();
+        return;
+    }
+    const contentType = res.getHeader("Content-Type");
+    if (body instanceof _stream.Stream) {
+        if (!contentType) {
+            res.setHeader("Content-Type", "application/octet-stream");
+        }
+        body.pipe(res);
+        return;
+    }
+    const isJSONLike = [
+        "object",
+        "number",
+        "boolean"
+    ].includes(typeof body);
+    const stringifiedBody = isJSONLike ? JSON.stringify(body) : body;
+    const etag = (0, _etag.generateETag)(stringifiedBody);
+    if ((0, _sendpayload.sendEtagResponse)(req, res, etag)) {
+        return;
+    }
+    if (Buffer.isBuffer(body)) {
+        if (!contentType) {
+            res.setHeader("Content-Type", "application/octet-stream");
+        }
+        res.setHeader("Content-Length", body.length);
+        res.end(body);
+        return;
+    }
+    if (isJSONLike) {
+        res.setHeader("Content-Type", "application/json; charset=utf-8");
+    }
+    res.setHeader("Content-Length", Buffer.byteLength(stringifiedBody));
+    res.end(stringifiedBody);
+}
+/**
+ * Send `JSON` object
+ * @param res response object
+ * @param jsonBody of data
+ */ function sendJson(res, jsonBody) {
+    // Set header to application/json
+    res.setHeader("Content-Type", "application/json; charset=utf-8");
+    // Use send to handle request
+    res.send(JSON.stringify(jsonBody));
+}
+function isValidData(str) {
+    return typeof str === "string" && str.length >= 16;
+}
+function setDraftMode(res, options) {
+    if (!isValidData(options.previewModeId)) {
+        throw new Error("invariant: invalid previewModeId");
+    }
+    const expires = options.enable ? undefined : new Date(0);
+    // To delete a cookie, set `expires` to a date in the past:
+    // https://tools.ietf.org/html/rfc6265#section-4.1.1
+    // `Max-Age: 0` is not valid, thus ignored, and the cookie is persisted.
+    const { serialize  } = __webpack_require__(252);
+    const previous = res.getHeader("Set-Cookie");
+    res.setHeader(`Set-Cookie`, [
+        ...typeof previous === "string" ? [
+            previous
+        ] : Array.isArray(previous) ? previous : [],
+        serialize(_index.COOKIE_NAME_PRERENDER_BYPASS, options.previewModeId, {
             httpOnly: true,
             sameSite:  true ? "none" : 0,
             secure: "production" !== "development",
             path: "/",
-            expires: new Date(0)
-        });
+            expires
+        })
+    ]);
+    return res;
+}
+function setPreviewData(res, data, options) {
+    if (!isValidData(options.previewModeId)) {
+        throw new Error("invariant: invalid previewModeId");
     }
-} //# sourceMappingURL=draft-mode-provider.js.map
+    if (!isValidData(options.previewModeEncryptionKey)) {
+        throw new Error("invariant: invalid previewModeEncryptionKey");
+    }
+    if (!isValidData(options.previewModeSigningKey)) {
+        throw new Error("invariant: invalid previewModeSigningKey");
+    }
+    const jsonwebtoken = __webpack_require__(5644);
+    const { encryptWithSecret  } = __webpack_require__(7176);
+    const payload = jsonwebtoken.sign({
+        data: encryptWithSecret(Buffer.from(options.previewModeEncryptionKey), JSON.stringify(data))
+    }, options.previewModeSigningKey, {
+        algorithm: "HS256",
+        ...options.maxAge !== undefined ? {
+            expiresIn: options.maxAge
+        } : undefined
+    });
+    // limit preview mode cookie to 2KB since we shouldn't store too much
+    // data here and browsers drop cookies over 4KB
+    if (payload.length > 2048) {
+        throw new Error(`Preview data is limited to 2KB currently, reduce how much data you are storing as preview data to continue`);
+    }
+    const { serialize  } = __webpack_require__(252);
+    const previous = res.getHeader("Set-Cookie");
+    res.setHeader(`Set-Cookie`, [
+        ...typeof previous === "string" ? [
+            previous
+        ] : Array.isArray(previous) ? previous : [],
+        serialize(_index.COOKIE_NAME_PRERENDER_BYPASS, options.previewModeId, {
+            httpOnly: true,
+            sameSite:  true ? "none" : 0,
+            secure: "production" !== "development",
+            path: "/",
+            ...options.maxAge !== undefined ? {
+                maxAge: options.maxAge
+            } : undefined,
+            ...options.path !== undefined ? {
+                path: options.path
+            } : undefined
+        }),
+        serialize(_index.COOKIE_NAME_PRERENDER_DATA, payload, {
+            httpOnly: true,
+            sameSite:  true ? "none" : 0,
+            secure: "production" !== "development",
+            path: "/",
+            ...options.maxAge !== undefined ? {
+                maxAge: options.maxAge
+            } : undefined,
+            ...options.path !== undefined ? {
+                path: options.path
+            } : undefined
+        })
+    ]);
+    return res;
+}
+async function revalidate(urlPath, opts, req, context) {
+    if (typeof urlPath !== "string" || !urlPath.startsWith("/")) {
+        throw new Error(`Invalid urlPath provided to revalidate(), must be a path e.g. /blog/post-1, received ${urlPath}`);
+    }
+    const revalidateHeaders = {
+        [_constants1.PRERENDER_REVALIDATE_HEADER]: context.previewModeId,
+        ...opts.unstable_onlyGenerated ? {
+            [_constants1.PRERENDER_REVALIDATE_ONLY_GENERATED_HEADER]: "1"
+        } : {}
+    };
+    const allowedRevalidateHeaderKeys = [
+        ...context.allowedRevalidateHeaderKeys || [],
+        ...context.trustHostHeader ? [
+            "cookie",
+            "x-vercel-protection-bypass"
+        ] : []
+    ];
+    for (const key of Object.keys(req.headers)){
+        if (allowedRevalidateHeaderKeys.includes(key)) {
+            revalidateHeaders[key] = req.headers[key];
+        }
+    }
+    try {
+        if (context.trustHostHeader) {
+            const res = await fetch(`https://${req.headers.host}${urlPath}`, {
+                method: "HEAD",
+                headers: revalidateHeaders
+            });
+            // we use the cache header to determine successful revalidate as
+            // a non-200 status code can be returned from a successful revalidate
+            // e.g. notFound: true returns 404 status code but is successful
+            const cacheHeader = res.headers.get("x-vercel-cache") || res.headers.get("x-nextjs-cache");
+            if ((cacheHeader == null ? void 0 : cacheHeader.toUpperCase()) !== "REVALIDATED" && !(res.status === 404 && opts.unstable_onlyGenerated)) {
+                throw new Error(`Invalid response ${res.status}`);
+            }
+        } else if (context.revalidate) {
+            const mocked = (0, _mockrequest.createRequestResponseMocks)({
+                url: urlPath,
+                headers: revalidateHeaders
+            });
+            await context.revalidate(mocked.req, mocked.res);
+            await mocked.res.hasStreamed;
+            if (mocked.res.getHeader("x-nextjs-cache") !== "REVALIDATED" && !(mocked.res.statusCode === 404 && opts.unstable_onlyGenerated)) {
+                throw new Error(`Invalid response ${mocked.res.statusCode}`);
+            }
+        } else {
+            throw new Error(`Invariant: required internal revalidate method not passed to api-utils`);
+        }
+    } catch (err) {
+        throw new Error(`Failed to revalidate ${urlPath}: ${(0, _iserror.default)(err) ? err.message : err}`);
+    }
+}
+async function apiResolver(req, res, query, resolverModule, apiContext, propagateError, dev, page) {
+    const apiReq = req;
+    const apiRes = res;
+    try {
+        var _config_api, _config_api1, _config_api2, _getTracer_getRootSpanAttributes;
+        if (!resolverModule) {
+            res.statusCode = 404;
+            res.end("Not Found");
+            return;
+        }
+        const config = resolverModule.config || {};
+        const bodyParser = ((_config_api = config.api) == null ? void 0 : _config_api.bodyParser) !== false;
+        const responseLimit = ((_config_api1 = config.api) == null ? void 0 : _config_api1.responseLimit) ?? true;
+        const externalResolver = ((_config_api2 = config.api) == null ? void 0 : _config_api2.externalResolver) || false;
+        // Parsing of cookies
+        (0, _index.setLazyProp)({
+            req: apiReq
+        }, "cookies", (0, _index.getCookieParser)(req.headers));
+        // Parsing query string
+        apiReq.query = query;
+        // Parsing preview data
+        (0, _index.setLazyProp)({
+            req: apiReq
+        }, "previewData", ()=>tryGetPreviewData(req, res, apiContext));
+        // Checking if preview mode is enabled
+        (0, _index.setLazyProp)({
+            req: apiReq
+        }, "preview", ()=>apiReq.previewData !== false ? true : undefined);
+        // Set draftMode to the same value as preview
+        (0, _index.setLazyProp)({
+            req: apiReq
+        }, "draftMode", ()=>apiReq.preview);
+        // Parsing of body
+        if (bodyParser && !apiReq.body) {
+            apiReq.body = await parseBody(apiReq, config.api && config.api.bodyParser && config.api.bodyParser.sizeLimit ? config.api.bodyParser.sizeLimit : "1mb");
+        }
+        let contentLength = 0;
+        const maxContentLength = getMaxContentLength(responseLimit);
+        const writeData = apiRes.write;
+        const endResponse = apiRes.end;
+        apiRes.write = (...args)=>{
+            contentLength += Buffer.byteLength(args[0] || "");
+            return writeData.apply(apiRes, args);
+        };
+        apiRes.end = (...args)=>{
+            if (args.length && typeof args[0] !== "function") {
+                contentLength += Buffer.byteLength(args[0] || "");
+            }
+            if (responseLimit && contentLength >= maxContentLength) {
+                console.warn(`API response for ${req.url} exceeds ${_bytes.default.format(maxContentLength)}. API Routes are meant to respond quickly. https://nextjs.org/docs/messages/api-routes-response-size-limit`);
+            }
+            endResponse.apply(apiRes, args);
+        };
+        apiRes.status = (statusCode)=>(0, _index.sendStatusCode)(apiRes, statusCode);
+        apiRes.send = (data)=>sendData(apiReq, apiRes, data);
+        apiRes.json = (data)=>sendJson(apiRes, data);
+        apiRes.redirect = (statusOrUrl, url)=>(0, _index.redirect)(apiRes, statusOrUrl, url);
+        apiRes.setDraftMode = (options = {
+            enable: true
+        })=>setDraftMode(apiRes, Object.assign({}, apiContext, options));
+        apiRes.setPreviewData = (data, options = {})=>setPreviewData(apiRes, data, Object.assign({}, apiContext, options));
+        apiRes.clearPreviewData = (options = {})=>(0, _index.clearPreviewData)(apiRes, options);
+        apiRes.revalidate = (urlPath, opts)=>revalidate(urlPath, opts || {}, req, apiContext);
+        const resolver = (0, _interopdefault.interopDefault)(resolverModule);
+        let wasPiped = false;
+        if (false) {}
+        (_getTracer_getRootSpanAttributes = (0, _tracer.getTracer)().getRootSpanAttributes()) == null ? void 0 : _getTracer_getRootSpanAttributes.set("next.route", page);
+        // Call API route method
+        const apiRouteResult = await (0, _tracer.getTracer)().trace(_constants.NodeSpan.runHandler, {
+            spanName: `executing api route (pages) ${page}`
+        }, ()=>resolver(req, res));
+        if (false) {}
+    } catch (err) {
+        if (err instanceof _index.ApiError) {
+            (0, _index.sendError)(apiRes, err.statusCode, err.message);
+        } else {
+            if (dev) {
+                if ((0, _iserror.default)(err)) {
+                    err.page = page;
+                }
+                throw err;
+            }
+            console.error(err);
+            if (propagateError) {
+                throw err;
+            }
+            (0, _index.sendError)(apiRes, 500, "Internal Server Error");
+        }
+    }
+} //# sourceMappingURL=node.js.map
 
 
 /***/ }),
@@ -2181,7 +2566,6 @@ const _approuterheaders = __webpack_require__(189);
 const _headers = __webpack_require__(1778);
 const _requestcookies = __webpack_require__(127);
 const _cookies = __webpack_require__(8306);
-const _draftmodeprovider = __webpack_require__(2484);
 function getHeaders(headers) {
     const cleaned = _headers.HeadersAdapter.from(headers);
     for (const param of _approuterheaders.FLIGHT_PARAMETERS){
@@ -2197,6 +2581,10 @@ function getMutableCookies(headers, res) {
     const cookies = new _cookies.RequestCookies(_headers.HeadersAdapter.from(headers));
     return _requestcookies.MutableRequestCookiesAdapter.seal(cookies, res);
 }
+/**
+ * Tries to get the preview data on the request for the given route. This
+ * isn't enabled in the edge runtime yet.
+ */ const tryGetPreviewData =  true ? (__webpack_require__(712).tryGetPreviewData) : 0;
 const RequestAsyncStorageWrapper = {
     /**
    * Wrap the callback with the given store so it can access the underlying
@@ -2207,11 +2595,10 @@ const RequestAsyncStorageWrapper = {
    * @param callback function to call within the scope of the context
    * @returns the result returned by the callback
    */ wrap (storage, { req , res , renderOpts  }, callback) {
-        let previewProps = undefined;
-        if (renderOpts && "previewProps" in renderOpts) {
-            // TODO: investigate why previewProps isn't on RenderOpts
-            previewProps = renderOpts.previewProps;
-        }
+        // Reads of this are cached on the `req` object, so this should resolve
+        // instantly. There's no need to pass this data down from a previous
+        // invoke.
+        const previewData = renderOpts && tryGetPreviewData && res ? tryGetPreviewData(req, res, renderOpts.previewProps) : false;
         const cache = {};
         const store = {
             get headers () {
@@ -2236,12 +2623,7 @@ const RequestAsyncStorageWrapper = {
                 }
                 return cache.mutableCookies;
             },
-            get draftMode () {
-                if (!cache.draftMode) {
-                    cache.draftMode = new _draftmodeprovider.DraftModeProvider(previewProps, req, this.cookies, this.mutableCookies);
-                }
-                return cache.draftMode;
-            }
+            previewData
         };
         return storage.run(store, callback, store);
     }
@@ -2281,7 +2663,6 @@ const StaticGenerationAsyncStorageWrapper = {
         const store = {
             isStaticGeneration,
             pathname,
-            originalPathname: renderOpts.originalPathname,
             incrementalCache: // so that it can access the fs cache without mocks
             renderOpts.incrementalCache || globalThis.__incrementalCache,
             isRevalidate: renderOpts.isRevalidate,
@@ -2294,6 +2675,78 @@ const StaticGenerationAsyncStorageWrapper = {
         return storage.run(store, callback, store);
     }
 }; //# sourceMappingURL=static-generation-async-storage-wrapper.js.map
+
+
+/***/ }),
+
+/***/ 7176:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+
+Object.defineProperty(exports, "__esModule", ({
+    value: true
+}));
+0 && (0);
+function _export(target, all) {
+    for(var name in all)Object.defineProperty(target, name, {
+        enumerable: true,
+        get: all[name]
+    });
+}
+_export(exports, {
+    encryptWithSecret: function() {
+        return encryptWithSecret;
+    },
+    decryptWithSecret: function() {
+        return decryptWithSecret;
+    }
+});
+const _crypto = /*#__PURE__*/ _interop_require_default(__webpack_require__(6113));
+function _interop_require_default(obj) {
+    return obj && obj.__esModule ? obj : {
+        default: obj
+    };
+}
+// Background:
+// https://security.stackexchange.com/questions/184305/why-would-i-ever-use-aes-256-cbc-if-aes-256-gcm-is-more-secure
+const CIPHER_ALGORITHM = `aes-256-gcm`, CIPHER_KEY_LENGTH = 32, CIPHER_IV_LENGTH = 16, CIPHER_TAG_LENGTH = 16, CIPHER_SALT_LENGTH = 64;
+const PBKDF2_ITERATIONS = 100000 // https://support.1password.com/pbkdf2/
+;
+function encryptWithSecret(secret, data) {
+    const iv = _crypto.default.randomBytes(CIPHER_IV_LENGTH);
+    const salt = _crypto.default.randomBytes(CIPHER_SALT_LENGTH);
+    // https://nodejs.org/api/crypto.html#crypto_crypto_pbkdf2sync_password_salt_iterations_keylen_digest
+    const key = _crypto.default.pbkdf2Sync(secret, salt, PBKDF2_ITERATIONS, CIPHER_KEY_LENGTH, `sha512`);
+    const cipher = _crypto.default.createCipheriv(CIPHER_ALGORITHM, key, iv);
+    const encrypted = Buffer.concat([
+        cipher.update(data, `utf8`),
+        cipher.final()
+    ]);
+    // https://nodejs.org/api/crypto.html#crypto_cipher_getauthtag
+    const tag = cipher.getAuthTag();
+    return Buffer.concat([
+        // Data as required by:
+        // Salt for Key: https://nodejs.org/api/crypto.html#crypto_crypto_pbkdf2sync_password_salt_iterations_keylen_digest
+        // IV: https://nodejs.org/api/crypto.html#crypto_class_decipher
+        // Tag: https://nodejs.org/api/crypto.html#crypto_decipher_setauthtag_buffer
+        salt,
+        iv,
+        tag,
+        encrypted
+    ]).toString(`hex`);
+}
+function decryptWithSecret(secret, encryptedData) {
+    const buffer = Buffer.from(encryptedData, `hex`);
+    const salt = buffer.slice(0, CIPHER_SALT_LENGTH);
+    const iv = buffer.slice(CIPHER_SALT_LENGTH, CIPHER_SALT_LENGTH + CIPHER_IV_LENGTH);
+    const tag = buffer.slice(CIPHER_SALT_LENGTH + CIPHER_IV_LENGTH, CIPHER_SALT_LENGTH + CIPHER_IV_LENGTH + CIPHER_TAG_LENGTH);
+    const encrypted = buffer.slice(CIPHER_SALT_LENGTH + CIPHER_IV_LENGTH + CIPHER_TAG_LENGTH);
+    // https://nodejs.org/api/crypto.html#crypto_crypto_pbkdf2sync_password_salt_iterations_keylen_digest
+    const key = _crypto.default.pbkdf2Sync(secret, salt, PBKDF2_ITERATIONS, CIPHER_KEY_LENGTH, `sha512`);
+    const decipher = _crypto.default.createDecipheriv(CIPHER_ALGORITHM, key, iv);
+    decipher.setAuthTag(tag);
+    return decipher.update(encrypted) + decipher.final(`utf8`);
+} //# sourceMappingURL=crypto-utils.js.map
 
 
 /***/ }),
@@ -2444,7 +2897,7 @@ function cleanURL(urlString) {
 
 /***/ }),
 
-/***/ 1090:
+/***/ 6850:
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -2709,7 +3162,7 @@ const _resolvehandlererror = __webpack_require__(5580);
 const _routekind = __webpack_require__(3624);
 const _log = /*#__PURE__*/ _interop_require_wildcard(__webpack_require__(6490));
 const _autoimplementmethods = __webpack_require__(9019);
-const _getnonstaticmethods = __webpack_require__(1090);
+const _getnonstaticmethods = __webpack_require__(6850);
 const _requestcookies = __webpack_require__(127);
 const _cookies = __webpack_require__(8306);
 const _headers = __webpack_require__(1778);
@@ -2822,9 +3275,6 @@ class AppRouteRouteModule extends _routemodule.RouteModule {
         const requestContext = {
             req: request
         };
-        requestContext.renderOpts = {
-            previewProps: context.prerenderManifest.preview
-        };
         // Get the context for the static generation.
         const staticGenerationContext = {
             pathname: this.definition.pathname,
@@ -2894,7 +3344,6 @@ class AppRouteRouteModule extends _routemodule.RouteModule {
                             "next.route": route
                         }
                     }, async ()=>{
-                        var _staticGenerationStore_tags;
                         // Patch the global fetch.
                         (0, _patchfetch.patchFetch)({
                             serverHooks: this.serverHooks,
@@ -2903,10 +3352,7 @@ class AppRouteRouteModule extends _routemodule.RouteModule {
                         const res = await handler(wrappedRequest, {
                             params: context.params
                         });
-                        context.staticGenerationContext.fetchMetrics = staticGenerationStore.fetchMetrics;
                         await Promise.all(staticGenerationStore.pendingRevalidates || []);
-                        (0, _patchfetch.addImplicitTags)(staticGenerationStore);
-                        context.staticGenerationContext.fetchTags = (_staticGenerationStore_tags = staticGenerationStore.tags) == null ? void 0 : _staticGenerationStore_tags.join(",");
                         // It's possible cookies were set in the handler, so we need
                         // to merge the modified cookies and the returned response
                         // here.
@@ -3091,12 +3537,12 @@ Object.defineProperty(exports, "RouteModule", ({
 // works. We need to import the built files from the dist directory, but we
 // can't do that directly because we need types from the source files. So we
 // import the types from the source files and then import the built files.
-const { requestAsyncStorage  } = __webpack_require__(8214);
+const { requestAsyncStorage  } = __webpack_require__(5120);
 const { staticGenerationAsyncStorage  } = __webpack_require__(1839);
 const serverHooks = __webpack_require__(5815);
 const headerHooks = __webpack_require__(904);
 const { staticGenerationBailout  } = __webpack_require__(9282);
-const { actionAsyncStorage  } = __webpack_require__(7797);
+const { actionAsyncStorage  } = __webpack_require__(5220);
 class RouteModule {
     constructor({ userland  }){
         /**
@@ -3128,7 +3574,65 @@ class RouteModule {
 
 /***/ }),
 
-/***/ 5110:
+/***/ 8312:
+/***/ ((__unused_webpack_module, exports) => {
+
+/**
+ * FNV-1a Hash implementation
+ * @author Travis Webb (tjwebb) <me@traviswebb.com>
+ *
+ * Ported from https://github.com/tjwebb/fnv-plus/blob/master/index.js
+ *
+ * Simplified, optimized and add modified for 52 bit, which provides a larger hash space
+ * and still making use of Javascript's 53-bit integer space.
+ */ 
+Object.defineProperty(exports, "__esModule", ({
+    value: true
+}));
+0 && (0);
+function _export(target, all) {
+    for(var name in all)Object.defineProperty(target, name, {
+        enumerable: true,
+        get: all[name]
+    });
+}
+_export(exports, {
+    fnv1a52: function() {
+        return fnv1a52;
+    },
+    generateETag: function() {
+        return generateETag;
+    }
+});
+const fnv1a52 = (str)=>{
+    const len = str.length;
+    let i = 0, t0 = 0, v0 = 0x2325, t1 = 0, v1 = 0x8422, t2 = 0, v2 = 0x9ce4, t3 = 0, v3 = 0xcbf2;
+    while(i < len){
+        v0 ^= str.charCodeAt(i++);
+        t0 = v0 * 435;
+        t1 = v1 * 435;
+        t2 = v2 * 435;
+        t3 = v3 * 435;
+        t2 += v0 << 8;
+        t3 += v1 << 8;
+        t1 += t0 >>> 16;
+        v0 = t0 & 65535;
+        t2 += t1 >>> 16;
+        v1 = t1 & 65535;
+        v3 = t3 + (t2 >>> 16) & 65535;
+        v2 = t2 & 65535;
+    }
+    return (v3 & 15) * 281474976710656 + v2 * 4294967296 + v1 * 65536 + (v0 ^ v3 >> 4);
+};
+const generateETag = (payload, weak = false)=>{
+    const prefix = weak ? 'W/"' : '"';
+    return prefix + fnv1a52(payload).toString(36) + payload.length.toString(36) + '"';
+}; //# sourceMappingURL=etag.js.map
+
+
+/***/ }),
+
+/***/ 2398:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
@@ -3143,58 +3647,265 @@ function _export(target, all) {
     });
 }
 _export(exports, {
-    addImplicitTags: function() {
-        return addImplicitTags;
+    MockedRequest: function() {
+        return MockedRequest;
     },
-    patchFetch: function() {
-        return patchFetch;
+    MockedResponse: function() {
+        return MockedResponse;
+    },
+    createRequestResponseMocks: function() {
+        return createRequestResponseMocks;
     }
 });
+const _stream = /*#__PURE__*/ _interop_require_default(__webpack_require__(2781));
+const _utils = __webpack_require__(3547);
+function _interop_require_default(obj) {
+    return obj && obj.__esModule ? obj : {
+        default: obj
+    };
+}
+class MockedRequest extends _stream.default.Readable {
+    constructor({ url , headers , method , socket =null  }){
+        super();
+        // This is hardcoded for now, but can be updated to be configurable if needed.
+        this.httpVersion = "1.0";
+        this.httpVersionMajor = 1;
+        this.httpVersionMinor = 0;
+        // If we don't actually have a socket, we'll just use a mock one that
+        // always returns false for the `encrypted` property.
+        this.socket = new Proxy({}, {
+            get: (_target, prop)=>{
+                if (prop !== "encrypted") {
+                    throw new Error("Method not implemented");
+                }
+                // For this mock request, always ensure we just respond with the encrypted
+                // set to false to ensure there's no odd leakages.
+                return false;
+            }
+        });
+        this.url = url;
+        this.headers = headers;
+        this.method = method;
+        if (socket) {
+            this.socket = socket;
+        }
+    }
+    _read() {
+        this.emit("end");
+        this.emit("close");
+    }
+    /**
+   * The `connection` property is just an alias for the `socket` property.
+   *
+   * @deprecated — since v13.0.0 - Use socket instead.
+   */ get connection() {
+        return this.socket;
+    }
+    // The following methods are not implemented as they are not used in the
+    // Next.js codebase.
+    get aborted() {
+        throw new Error("Method not implemented");
+    }
+    get complete() {
+        throw new Error("Method not implemented");
+    }
+    get trailers() {
+        throw new Error("Method not implemented");
+    }
+    get rawTrailers() {
+        throw new Error("Method not implemented");
+    }
+    get rawHeaders() {
+        throw new Error("Method not implemented.");
+    }
+    setTimeout() {
+        throw new Error("Method not implemented.");
+    }
+}
+class MockedResponse extends _stream.default.Writable {
+    constructor({ socket =null  }){
+        super();
+        this.statusCode = 200;
+        this.statusMessage = "";
+        this.finished = false;
+        this.headersSent = false;
+        /**
+   * A list of buffers that have been written to the response.
+   */ this.buffers = [];
+        this.headers = new Headers();
+        this.socket = socket;
+        // Attach listeners for the `finish`, `end`, and `error` events to the
+        // `MockedResponse` instance.
+        this.hasStreamed = new Promise((resolve, reject)=>{
+            this.on("finish", ()=>resolve(true));
+            this.on("end", ()=>resolve(true));
+            this.on("error", (err)=>reject(err));
+        });
+    }
+    /**
+   * The `connection` property is just an alias for the `socket` property.
+   *
+   * @deprecated — since v13.0.0 - Use socket instead.
+   */ get connection() {
+        return this.socket;
+    }
+    write(chunk) {
+        this.buffers.push(Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk));
+        return true;
+    }
+    /**
+   * This method is a no-op because the `MockedResponse` instance is not
+   * actually connected to a socket. This method is not specified on the
+   * interface type for `ServerResponse` but is called by Node.js.
+   *
+   * @see https://github.com/nodejs/node/pull/7949
+   */ _implicitHeader() {}
+    _write(chunk, _encoding, callback) {
+        this.write(chunk);
+        // According to Node.js documentation, the callback MUST be invoked to
+        // signal that the write completed successfully. If this callback is not
+        // invoked, the 'finish' event will not be emitted.
+        //
+        // https://nodejs.org/docs/latest-v16.x/api/stream.html#writable_writechunk-encoding-callback
+        callback();
+    }
+    writeHead(statusCode, statusMessage, headers) {
+        if (!headers && typeof statusMessage !== "string") {
+            headers = statusMessage;
+        } else if (typeof statusMessage === "string" && statusMessage.length > 0) {
+            this.statusMessage = statusMessage;
+        }
+        if (headers) {
+            // When headers have been set with response.setHeader(), they will be
+            // merged with any headers passed to response.writeHead(), with the
+            // headers passed to response.writeHead() given precedence.
+            //
+            // https://nodejs.org/api/http.html#responsewriteheadstatuscode-statusmessage-headers
+            //
+            // For this reason, we need to only call `set` to ensure that this will
+            // overwrite any existing headers.
+            if (Array.isArray(headers)) {
+                // headers may be an Array where the keys and values are in the same list.
+                // It is not a list of tuples. So, the even-numbered offsets are key
+                // values, and the odd-numbered offsets are the associated values. The
+                // array is in the same format as request.rawHeaders.
+                for(let i = 0; i < headers.length; i += 2){
+                    // The header key is always a string according to the spec.
+                    this.setHeader(headers[i], headers[i + 1]);
+                }
+            } else {
+                for (const [key, value] of Object.entries(headers)){
+                    // Skip undefined values
+                    if (typeof value === "undefined") continue;
+                    this.setHeader(key, value);
+                }
+            }
+        }
+        this.statusCode = statusCode;
+        return this;
+    }
+    hasHeader(name) {
+        return this.headers.has(name);
+    }
+    getHeader(name) {
+        return this.headers.get(name) ?? undefined;
+    }
+    getHeaders() {
+        return (0, _utils.toNodeHeaders)(this.headers);
+    }
+    getHeaderNames() {
+        return Array.from(this.headers.keys());
+    }
+    setHeader(name, value) {
+        if (Array.isArray(value)) {
+            // Because `set` here should override any existing values, we need to
+            // delete the existing values before setting the new ones via `append`.
+            this.headers.delete(name);
+            for (const v of value){
+                this.headers.append(name, v);
+            }
+        } else if (typeof value === "number") {
+            this.headers.set(name, value.toString());
+        } else {
+            this.headers.set(name, value);
+        }
+    }
+    removeHeader(name) {
+        this.headers.delete(name);
+    }
+    // The following methods are not implemented as they are not used in the
+    // Next.js codebase.
+    assignSocket() {
+        throw new Error("Method not implemented.");
+    }
+    detachSocket() {
+        throw new Error("Method not implemented.");
+    }
+    writeContinue() {
+        throw new Error("Method not implemented.");
+    }
+    writeProcessing() {
+        throw new Error("Method not implemented.");
+    }
+    get upgrading() {
+        throw new Error("Method not implemented.");
+    }
+    get chunkedEncoding() {
+        throw new Error("Method not implemented.");
+    }
+    get shouldKeepAlive() {
+        throw new Error("Method not implemented.");
+    }
+    get useChunkedEncodingByDefault() {
+        throw new Error("Method not implemented.");
+    }
+    get sendDate() {
+        throw new Error("Method not implemented.");
+    }
+    setTimeout() {
+        throw new Error("Method not implemented.");
+    }
+    addTrailers() {
+        throw new Error("Method not implemented.");
+    }
+    flushHeaders() {
+        throw new Error("Method not implemented.");
+    }
+}
+function createRequestResponseMocks({ url , headers ={} , method ="GET" , socket =null  }) {
+    return {
+        req: new MockedRequest({
+            url,
+            headers,
+            method,
+            socket
+        }),
+        res: new MockedResponse({
+            socket
+        })
+    };
+} //# sourceMappingURL=mock-request.js.map
+
+
+/***/ }),
+
+/***/ 5110:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+
+Object.defineProperty(exports, "__esModule", ({
+    value: true
+}));
+Object.defineProperty(exports, "patchFetch", ({
+    enumerable: true,
+    get: function() {
+        return patchFetch;
+    }
+}));
 const _constants = __webpack_require__(5511);
 const _tracer = __webpack_require__(6730);
 const _constants1 = __webpack_require__(2523);
 const isEdgeRuntime = "nodejs" === "edge";
-function addImplicitTags(staticGenerationStore) {
-    const newTags = [];
-    const pathname = staticGenerationStore == null ? void 0 : staticGenerationStore.originalPathname;
-    if (!pathname) {
-        return newTags;
-    }
-    if (!Array.isArray(staticGenerationStore.tags)) {
-        staticGenerationStore.tags = [];
-    }
-    if (!staticGenerationStore.tags.includes(pathname)) {
-        staticGenerationStore.tags.push(pathname);
-    }
-    newTags.push(pathname);
-    return newTags;
-}
-function trackFetchMetric(staticGenerationStore, ctx) {
-    if (!staticGenerationStore) return;
-    if (!staticGenerationStore.fetchMetrics) {
-        staticGenerationStore.fetchMetrics = [];
-    }
-    const dedupeFields = [
-        "url",
-        "status",
-        "method"
-    ];
-    // don't add metric if one already exists for the fetch
-    if (staticGenerationStore.fetchMetrics.some((metric)=>{
-        return dedupeFields.every((field)=>metric[field] === ctx[field]);
-    })) {
-        return;
-    }
-    staticGenerationStore.fetchMetrics.push({
-        url: ctx.url,
-        cacheStatus: ctx.cacheStatus,
-        status: ctx.status,
-        method: ctx.method,
-        start: ctx.start,
-        end: Date.now(),
-        idx: staticGenerationStore.nextFetchId || 0
-    });
-}
 function patchFetch({ serverHooks , staticGenerationAsyncStorage  }) {
     if (globalThis.fetch.__nextPatched) return;
     const { DynamicServerError  } = serverHooks;
@@ -3210,7 +3921,6 @@ function patchFetch({ serverHooks , staticGenerationAsyncStorage  }) {
             // Error caused by malformed URL should be handled by native fetch
             url = undefined;
         }
-        const fetchStart = Date.now();
         const method = (init == null ? void 0 : (_init_method = init.method) == null ? void 0 : _init_method.toUpperCase()) || "GET";
         return await (0, _tracer.getTracer)().trace(_constants.AppRenderSpan.fetch, {
             kind: _tracer.SpanKind.CLIENT,
@@ -3247,35 +3957,14 @@ function patchFetch({ serverHooks , staticGenerationAsyncStorage  }) {
             // RequestInit doesn't keep extra fields e.g. next so it's
             // only available if init is used separate
             let curRevalidate = getNextField("revalidate");
-            const tags = getNextField("tags") || [];
-            if (Array.isArray(tags)) {
-                if (!staticGenerationStore.tags) {
-                    staticGenerationStore.tags = [];
-                }
-                for (const tag of tags){
-                    if (!staticGenerationStore.tags.includes(tag)) {
-                        staticGenerationStore.tags.push(tag);
-                    }
-                }
-            }
-            const implicitTags = addImplicitTags(staticGenerationStore);
-            for (const tag of implicitTags || []){
-                if (!tags.includes(tag)) {
-                    tags.push(tag);
-                }
-            }
+            const tags = getNextField("tags");
             const isOnlyCache = staticGenerationStore.fetchCache === "only-cache";
             const isForceCache = staticGenerationStore.fetchCache === "force-cache";
-            const isDefaultCache = staticGenerationStore.fetchCache === "default-cache";
             const isDefaultNoStore = staticGenerationStore.fetchCache === "default-no-store";
             const isOnlyNoStore = staticGenerationStore.fetchCache === "only-no-store";
             const isForceNoStore = staticGenerationStore.fetchCache === "force-no-store";
-            let _cache = getRequestMeta("cache");
-            if (typeof _cache === "string" && typeof curRevalidate !== "undefined") {
-                console.warn(`Warning: fetch for ${input.toString()} specified "cache: ${_cache}" and "revalidate: ${curRevalidate}", only one should be specified.`);
-                _cache = undefined;
-            }
-            if (_cache === "force-cache") {
+            const _cache = getRequestMeta("cache");
+            if (_cache === "force-cache" || isForceCache) {
                 curRevalidate = false;
             }
             if ([
@@ -3284,10 +3973,12 @@ function patchFetch({ serverHooks , staticGenerationAsyncStorage  }) {
             ].includes(_cache || "")) {
                 curRevalidate = 0;
             }
-            if (typeof curRevalidate === "number" || curRevalidate === false) {
+            if (typeof curRevalidate === "number") {
                 revalidate = curRevalidate;
             }
-            let cacheReason = "";
+            if (curRevalidate === false) {
+                revalidate = _constants1.CACHE_ONE_YEAR;
+            }
             const _headers = getRequestMeta("headers");
             const initHeaders = typeof (_headers == null ? void 0 : _headers.get) === "function" ? _headers : new Headers(_headers || {});
             const hasUnCacheableHeader = initHeaders.get("authorization") || initHeaders.get("cookie");
@@ -3301,46 +3992,31 @@ function patchFetch({ serverHooks , staticGenerationAsyncStorage  }) {
             const autoNoCache = (hasUnCacheableHeader || isUnCacheableMethod) && staticGenerationStore.revalidate === 0;
             if (isForceNoStore) {
                 revalidate = 0;
-                cacheReason = "fetchCache = force-no-store";
             }
             if (isOnlyNoStore) {
                 if (_cache === "force-cache" || revalidate === 0) {
                     throw new Error(`cache: 'force-cache' used on fetch for ${input.toString()} with 'export const fetchCache = 'only-no-store'`);
                 }
                 revalidate = 0;
-                cacheReason = "fetchCache = only-no-store";
-            }
-            if (isOnlyCache && _cache === "no-store") {
-                throw new Error(`cache: 'no-store' used on fetch for ${input.toString()} with 'export const fetchCache = 'only-cache'`);
-            }
-            if (isForceCache && (typeof curRevalidate === "undefined" || curRevalidate === 0)) {
-                cacheReason = "fetchCache = force-cache";
-                revalidate = false;
             }
             if (typeof revalidate === "undefined") {
-                if (isDefaultCache) {
-                    revalidate = false;
-                    cacheReason = "fetchCache = default-cache";
-                } else if (autoNoCache) {
+                if (isOnlyCache && _cache === "no-store") {
+                    throw new Error(`cache: 'no-store' used on fetch for ${input.toString()} with 'export const fetchCache = 'only-cache'`);
+                }
+                if (autoNoCache) {
                     revalidate = 0;
-                    cacheReason = "auto no cache";
                 } else if (isDefaultNoStore) {
                     revalidate = 0;
-                    cacheReason = "fetchCache = default-no-store";
                 } else {
-                    cacheReason = "auto cache";
-                    revalidate = typeof staticGenerationStore.revalidate === "boolean" || typeof staticGenerationStore.revalidate === "undefined" ? false : staticGenerationStore.revalidate;
+                    revalidate = typeof staticGenerationStore.revalidate === "boolean" || typeof staticGenerationStore.revalidate === "undefined" ? _constants1.CACHE_ONE_YEAR : staticGenerationStore.revalidate;
                 }
-            } else if (!cacheReason) {
-                cacheReason = `revalidate: ${revalidate}`;
             }
             if (// revalidate although if it occurs during build we do
-            !autoNoCache && (typeof staticGenerationStore.revalidate === "undefined" || typeof revalidate === "number" && (staticGenerationStore.revalidate === false || typeof staticGenerationStore.revalidate === "number" && revalidate < staticGenerationStore.revalidate))) {
+            !autoNoCache && (typeof staticGenerationStore.revalidate === "undefined" || typeof revalidate === "number" && typeof staticGenerationStore.revalidate === "number" && revalidate < staticGenerationStore.revalidate)) {
                 staticGenerationStore.revalidate = revalidate;
             }
-            const isCacheableRevalidate = typeof revalidate === "number" && revalidate > 0 || revalidate === false;
             let cacheKey;
-            if (staticGenerationStore.incrementalCache && isCacheableRevalidate) {
+            if (staticGenerationStore.incrementalCache && typeof revalidate === "number" && revalidate > 0) {
                 try {
                     cacheKey = await staticGenerationStore.incrementalCache.fetchCacheKey(isRequestInput ? input.url : input.toString(), isRequestInput ? input : init);
                 } catch (err) {
@@ -3385,8 +4061,7 @@ function patchFetch({ serverHooks , staticGenerationAsyncStorage  }) {
             const fetchUrl = (url == null ? void 0 : url.toString()) ?? "";
             const fetchIdx = staticGenerationStore.nextFetchId ?? 1;
             staticGenerationStore.nextFetchId = fetchIdx + 1;
-            const normalizedRevalidate = typeof revalidate !== "number" ? _constants1.CACHE_ONE_YEAR : revalidate;
-            const doOriginalFetch = async (isStale)=>{
+            const doOriginalFetch = async ()=>{
                 // add metadata to init without editing the original
                 const clonedInit = {
                     ...init,
@@ -3397,17 +4072,7 @@ function patchFetch({ serverHooks , staticGenerationAsyncStorage  }) {
                     }
                 };
                 return originFetch(input, clonedInit).then(async (res)=>{
-                    if (!isStale) {
-                        trackFetchMetric(staticGenerationStore, {
-                            start: fetchStart,
-                            url: fetchUrl,
-                            cacheReason,
-                            cacheStatus: "miss",
-                            status: res.status,
-                            method: clonedInit.method || "GET"
-                        });
-                    }
-                    if (res.status === 200 && staticGenerationStore.incrementalCache && cacheKey && isCacheableRevalidate) {
+                    if (res.status === 200 && staticGenerationStore.incrementalCache && cacheKey && typeof revalidate === "number" && revalidate > 0) {
                         const bodyBuffer = Buffer.from(await res.arrayBuffer());
                         try {
                             await staticGenerationStore.incrementalCache.set(cacheKey, {
@@ -3418,7 +4083,7 @@ function patchFetch({ serverHooks , staticGenerationAsyncStorage  }) {
                                     status: res.status,
                                     tags
                                 },
-                                revalidate: normalizedRevalidate
+                                revalidate
                             }, revalidate, true, fetchUrl, fetchIdx);
                         } catch (err) {
                             console.warn(`Failed to set fetch cache`, input, err);
@@ -3442,7 +4107,7 @@ function patchFetch({ serverHooks , staticGenerationAsyncStorage  }) {
                             if (!staticGenerationStore.pendingRevalidates) {
                                 staticGenerationStore.pendingRevalidates = [];
                             }
-                            staticGenerationStore.pendingRevalidates.push(doOriginalFetch(true).catch(console.error));
+                            staticGenerationStore.pendingRevalidates.push(doOriginalFetch().catch(console.error));
                         } else if (tags && !tags.every((tag)=>{
                             return currentTags == null ? void 0 : currentTags.includes(tag);
                         })) {
@@ -3464,14 +4129,6 @@ function patchFetch({ serverHooks , staticGenerationAsyncStorage  }) {
                         if (false) {} else {
                             decodedBody = Buffer.from(resData.body, "base64").subarray();
                         }
-                        trackFetchMetric(staticGenerationStore, {
-                            start: fetchStart,
-                            url: fetchUrl,
-                            cacheReason,
-                            cacheStatus: "hit",
-                            status: resData.status || 200,
-                            method: (init == null ? void 0 : init.method) || "GET"
-                        });
                         return new Response(decodedBody, {
                             headers: resData.headers,
                             status: resData.status
@@ -3887,6 +4544,126 @@ if (!("getAll" in Headers.prototype)) {
         return headers.map(([, value])=>value);
     };
 } //# sourceMappingURL=node-polyfill-headers.js.map
+
+
+/***/ }),
+
+/***/ 9881:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+
+Object.defineProperty(exports, "__esModule", ({
+    value: true
+}));
+0 && (0);
+function _export(target, all) {
+    for(var name in all)Object.defineProperty(target, name, {
+        enumerable: true,
+        get: all[name]
+    });
+}
+_export(exports, {
+    setRevalidateHeaders: function() {
+        return _revalidateheaders.setRevalidateHeaders;
+    },
+    sendEtagResponse: function() {
+        return sendEtagResponse;
+    },
+    sendRenderResult: function() {
+        return sendRenderResult;
+    }
+});
+const _utils = __webpack_require__(8281);
+const _etag = __webpack_require__(8312);
+const _fresh = /*#__PURE__*/ _interop_require_default(__webpack_require__(7664));
+const _revalidateheaders = __webpack_require__(2798);
+const _approuterheaders = __webpack_require__(189);
+function _interop_require_default(obj) {
+    return obj && obj.__esModule ? obj : {
+        default: obj
+    };
+}
+function sendEtagResponse(req, res, etag) {
+    if (etag) {
+        /**
+     * The server generating a 304 response MUST generate any of the
+     * following header fields that would have been sent in a 200 (OK)
+     * response to the same request: Cache-Control, Content-Location, Date,
+     * ETag, Expires, and Vary. https://tools.ietf.org/html/rfc7232#section-4.1
+     */ res.setHeader("ETag", etag);
+    }
+    if ((0, _fresh.default)(req.headers, {
+        etag
+    })) {
+        res.statusCode = 304;
+        res.end();
+        return true;
+    }
+    return false;
+}
+async function sendRenderResult({ req , res , result , type , generateEtags , poweredByHeader , options  }) {
+    if ((0, _utils.isResSent)(res)) {
+        return;
+    }
+    if (poweredByHeader && type === "html") {
+        res.setHeader("X-Powered-By", "Next.js");
+    }
+    const payload = result.isDynamic() ? null : await result.toUnchunkedString();
+    if (payload) {
+        const etag = generateEtags ? (0, _etag.generateETag)(payload) : undefined;
+        if (sendEtagResponse(req, res, etag)) {
+            return;
+        }
+    }
+    const resultContentType = result.contentType();
+    if (!res.getHeader("Content-Type")) {
+        res.setHeader("Content-Type", resultContentType ? resultContentType : type === "rsc" ? _approuterheaders.RSC_CONTENT_TYPE_HEADER : type === "json" ? "application/json" : "text/html; charset=utf-8");
+    }
+    if (payload) {
+        res.setHeader("Content-Length", Buffer.byteLength(payload));
+    }
+    if (options != null) {
+        (0, _revalidateheaders.setRevalidateHeaders)(res, options);
+    }
+    if (req.method === "HEAD") {
+        res.end(null);
+    } else if (payload) {
+        res.end(payload);
+    } else {
+        await result.pipe(res);
+    }
+} //# sourceMappingURL=index.js.map
+
+
+/***/ }),
+
+/***/ 2798:
+/***/ ((__unused_webpack_module, exports) => {
+
+
+Object.defineProperty(exports, "__esModule", ({
+    value: true
+}));
+Object.defineProperty(exports, "setRevalidateHeaders", ({
+    enumerable: true,
+    get: function() {
+        return setRevalidateHeaders;
+    }
+}));
+function setRevalidateHeaders(res, options) {
+    if (options.private || options.stateful) {
+        if (options.private || !res.getHeader("Cache-Control")) {
+            res.setHeader("Cache-Control", `private, no-cache, no-store, max-age=0, must-revalidate`);
+        }
+    } else if (typeof options.revalidate === "number") {
+        if (options.revalidate < 1) {
+            throw new Error(`invariant: invalid Cache-Control duration provided: ${options.revalidate} < 1`);
+        }
+        res.setHeader("Cache-Control", `s-maxage=${options.revalidate}, stale-while-revalidate`);
+    } else if (options.revalidate === false) {
+        res.setHeader("Cache-Control", `s-maxage=31536000, stale-while-revalidate`);
+    }
+} //# sourceMappingURL=revalidate-headers.js.map
 
 
 /***/ }),
@@ -4476,12 +5253,6 @@ class MutableRequestCookiesAdapter {
         let modifiedValues = [];
         const modifiedCookies = new Set();
         const updateResponseCookies = ()=>{
-            var _fetch___nextGetStaticStore;
-            // TODO-APP: change method of getting staticGenerationAsyncStore
-            const staticGenerationAsyncStore = fetch.__nextGetStaticStore == null ? void 0 : (_fetch___nextGetStaticStore = fetch.__nextGetStaticStore()) == null ? void 0 : _fetch___nextGetStaticStore.getStore();
-            if (staticGenerationAsyncStore) {
-                staticGenerationAsyncStore.pathWasRevalidated = true;
-            }
             const allCookies = responseCookes.getAll();
             modifiedValues = allCookies.filter((c)=>modifiedCookies.has(c.name));
             if (res) {
@@ -4824,6 +5595,209 @@ class NextResponse extends Response {
 
 /***/ }),
 
+/***/ 4521:
+/***/ ((__unused_webpack_module, exports) => {
+
+var __webpack_unused_export__;
+
+__webpack_unused_export__ = ({
+    value: true
+});
+Object.defineProperty(exports, "A", ({
+    enumerable: true,
+    get: function() {
+        return unstable_cache;
+    }
+}));
+function unstable_cache(cb, keyParts, options) {
+    const joinedKey = cb.toString() + "-" + keyParts.join(", ");
+    const staticGenerationAsyncStorage = fetch.__nextGetStaticStore == null ? void 0 : fetch.__nextGetStaticStore();
+    const store = staticGenerationAsyncStorage == null ? void 0 : staticGenerationAsyncStorage.getStore();
+    if (!store || !store.incrementalCache) {
+        throw new Error(`Invariant: static generation store missing in unstable_cache ${joinedKey}`);
+    }
+    if (options.revalidate === 0) {
+        throw new Error(`Invariant revalidate: 0 can not be passed to unstable_cache(), must be "false" or "> 0" ${joinedKey}`);
+    }
+    return async (...args)=>{
+        // We override the default fetch cache handling inside of the
+        // cache callback so that we only cache the specific values returned
+        // from the callback instead of also caching any fetches done inside
+        // of the callback as well
+        return staticGenerationAsyncStorage == null ? void 0 : staticGenerationAsyncStorage.run({
+            ...store,
+            fetchCache: "only-no-store"
+        }, async ()=>{
+            var _store_incrementalCache, _store_incrementalCache1;
+            const cacheKey = await ((_store_incrementalCache = store.incrementalCache) == null ? void 0 : _store_incrementalCache.fetchCacheKey(joinedKey));
+            const cacheEntry = cacheKey && !store.isOnDemandRevalidate && await ((_store_incrementalCache1 = store.incrementalCache) == null ? void 0 : _store_incrementalCache1.get(cacheKey, true, options.revalidate));
+            const invokeCallback = async ()=>{
+                const result = await cb(...args);
+                if (cacheKey && store.incrementalCache) {
+                    await store.incrementalCache.set(cacheKey, {
+                        kind: "FETCH",
+                        data: {
+                            headers: {},
+                            // TODO: handle non-JSON values?
+                            body: JSON.stringify(result),
+                            status: 200,
+                            tags: options.tags
+                        },
+                        revalidate: options.revalidate
+                    }, options.revalidate, true);
+                }
+                return result;
+            };
+            if (!cacheEntry || !cacheEntry.value) {
+                return invokeCallback();
+            }
+            if (cacheEntry.value.kind !== "FETCH") {
+                console.error(`Invariant invalid cacheEntry returned for ${joinedKey}`);
+                return invokeCallback();
+            }
+            let cachedValue;
+            const isStale = cacheEntry.isStale;
+            if (cacheEntry) {
+                const resData = cacheEntry.value.data;
+                cachedValue = JSON.parse(resData.body);
+            }
+            const currentTags = cacheEntry.value.data.tags;
+            if (isStale) {
+                if (!store.pendingRevalidates) {
+                    store.pendingRevalidates = [];
+                }
+                store.pendingRevalidates.push(invokeCallback().catch((err)=>console.error(`revalidating cache with key: ${joinedKey}`, err)));
+            } else if (options.tags && !options.tags.every((tag)=>{
+                return currentTags == null ? void 0 : currentTags.includes(tag);
+            })) {
+                var _store_incrementalCache2;
+                if (!cacheEntry.value.data.tags) {
+                    cacheEntry.value.data.tags = [];
+                }
+                for (const tag of options.tags){
+                    if (!cacheEntry.value.data.tags.includes(tag)) {
+                        cacheEntry.value.data.tags.push(tag);
+                    }
+                }
+                (_store_incrementalCache2 = store.incrementalCache) == null ? void 0 : _store_incrementalCache2.set(cacheKey, cacheEntry.value, options.revalidate, true);
+            }
+            return cachedValue;
+        });
+    };
+} //# sourceMappingURL=unstable-cache.js.map
+
+
+/***/ }),
+
+/***/ 3789:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+var __webpack_unused_export__;
+
+__webpack_unused_export__ = ({
+    value: true
+});
+Object.defineProperty(exports, "x", ({
+    enumerable: true,
+    get: function() {
+        return unstable_revalidatePath;
+    }
+}));
+const _headers = __webpack_require__(904);
+const _constants = __webpack_require__(2523);
+function unstable_revalidatePath(path, ctx = {}) {
+    var _store_incrementalCache, _store_incrementalCache_prerenderManifest, _store_incrementalCache_prerenderManifest_preview, _store_incrementalCache1, _store_incrementalCache2, _store_incrementalCache3;
+    const staticGenerationAsyncStorage = fetch.__nextGetStaticStore == null ? void 0 : fetch.__nextGetStaticStore();
+    const store = staticGenerationAsyncStorage == null ? void 0 : staticGenerationAsyncStorage.getStore();
+    if (!store) {
+        throw new Error(`Invariant: static generation store missing in unstable_revalidatePath ${path}`);
+    }
+    if (!store.pendingRevalidates) {
+        store.pendingRevalidates = [];
+    }
+    const previewModeId = ((_store_incrementalCache = store.incrementalCache) == null ? void 0 : (_store_incrementalCache_prerenderManifest = _store_incrementalCache.prerenderManifest) == null ? void 0 : (_store_incrementalCache_prerenderManifest_preview = _store_incrementalCache_prerenderManifest.preview) == null ? void 0 : _store_incrementalCache_prerenderManifest_preview.previewModeId) || undefined;
+    const reqHeaders = ((_store_incrementalCache1 = store.incrementalCache) == null ? void 0 : _store_incrementalCache1.requestHeaders) || Object.fromEntries((0, _headers.headers)());
+    const host = reqHeaders["host"];
+    const proto = ((_store_incrementalCache2 = store.incrementalCache) == null ? void 0 : _store_incrementalCache2.requestProtocol) || "https";
+    // TODO: glob handling + blocking/soft revalidate
+    const revalidateURL = `${proto}://${host}${path}`;
+    const revalidateHeaders = {
+        [_constants.PRERENDER_REVALIDATE_HEADER]: previewModeId,
+        ...ctx.unstable_onlyGenerated ? {
+            [_constants.PRERENDER_REVALIDATE_ONLY_GENERATED_HEADER]: "1"
+        } : {}
+    };
+    const curAllowedRevalidateHeaderKeys = ((_store_incrementalCache3 = store.incrementalCache) == null ? void 0 : _store_incrementalCache3.allowedRevalidateHeaderKeys) || undefined;
+    const allowedRevalidateHeaderKeys = [
+        ...curAllowedRevalidateHeaderKeys || [],
+        ...!store.incrementalCache ? [
+            "cookie",
+            "x-vercel-protection-bypass"
+        ] : []
+    ];
+    for (const key of Object.keys(reqHeaders)){
+        if (allowedRevalidateHeaderKeys.includes(key)) {
+            revalidateHeaders[key] = reqHeaders[key];
+        }
+    }
+    const fetchIPv4v6 = (v6 = false)=>{
+        const curUrl = new URL(revalidateURL);
+        const hostname = curUrl.hostname;
+        if (!v6 && hostname === "localhost") {
+            curUrl.hostname = "127.0.0.1";
+        }
+        return fetch(curUrl, {
+            method: "HEAD",
+            headers: revalidateHeaders
+        }).then((res)=>{
+            const cacheHeader = res.headers.get("x-vercel-cache") || res.headers.get("x-nextjs-cache");
+            if ((cacheHeader == null ? void 0 : cacheHeader.toLowerCase()) !== "revalidated") {
+                throw new Error(`received invalid response ${res.status} ${cacheHeader}`);
+            }
+        }).catch((err)=>{
+            if (err.code === "ECONNREFUSED" && !v6) {
+                return fetchIPv4v6(true);
+            }
+            console.error(`revalidatePath failed for ${revalidateURL}`, err);
+        });
+    };
+    store.pendingRevalidates.push(fetchIPv4v6());
+} //# sourceMappingURL=unstable-revalidate-path.js.map
+
+
+/***/ }),
+
+/***/ 1610:
+/***/ ((__unused_webpack_module, exports) => {
+
+var __webpack_unused_export__;
+
+__webpack_unused_export__ = ({
+    value: true
+});
+Object.defineProperty(exports, "B", ({
+    enumerable: true,
+    get: function() {
+        return unstable_revalidateTag;
+    }
+}));
+function unstable_revalidateTag(tag) {
+    const staticGenerationAsyncStorage = fetch.__nextGetStaticStore == null ? void 0 : fetch.__nextGetStaticStore();
+    const store = staticGenerationAsyncStorage == null ? void 0 : staticGenerationAsyncStorage.getStore();
+    if (!store || !store.incrementalCache) {
+        throw new Error(`Invariant: static generation store missing in unstable_revalidateTag ${tag}`);
+    }
+    if (!store.pendingRevalidates) {
+        store.pendingRevalidates = [];
+    }
+    store.pendingRevalidates.push(store.incrementalCache.revalidateTag == null ? void 0 : store.incrementalCache.revalidateTag(tag).catch((err)=>{
+        console.error(`revalidateTag failed for ${tag}`, err);
+    }));
+} //# sourceMappingURL=unstable-revalidate-tag.js.map
+
+
+/***/ }),
+
 /***/ 103:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
@@ -5025,6 +5999,50 @@ function getHostname(parsed, headers) {
     } else return;
     return hostname.toLowerCase();
 } //# sourceMappingURL=get-hostname.js.map
+
+
+/***/ }),
+
+/***/ 4346:
+/***/ ((__unused_webpack_module, exports) => {
+
+
+Object.defineProperty(exports, "__esModule", ({
+    value: true
+}));
+0 && (0);
+function _export(target, all) {
+    for(var name in all)Object.defineProperty(target, name, {
+        enumerable: true,
+        get: all[name]
+    });
+}
+_export(exports, {
+    getObjectClassLabel: function() {
+        return getObjectClassLabel;
+    },
+    isPlainObject: function() {
+        return isPlainObject;
+    }
+});
+function getObjectClassLabel(value) {
+    return Object.prototype.toString.call(value);
+}
+function isPlainObject(value) {
+    if (getObjectClassLabel(value) !== "[object Object]") {
+        return false;
+    }
+    const prototype = Object.getPrototypeOf(value);
+    /**
+   * this used to be previously:
+   *
+   * `return prototype === null || prototype === Object.prototype`
+   *
+   * but Edge Runtime expose Object from vm, being that kind of type-checking wrongly fail.
+   *
+   * It was changed to the current implementation since it's resilient to serialization.
+   */ return prototype === null || prototype.hasOwnProperty("isPrototypeOf");
+} //# sourceMappingURL=is-plain-object.js.map
 
 
 /***/ }),
@@ -5311,6 +6329,9 @@ const serverExports = {
     NextRequest: (__webpack_require__(2091).NextRequest),
     NextResponse: (__webpack_require__(6843)/* .NextResponse */ .x),
     ImageResponse: (__webpack_require__(7779)/* .ImageResponse */ .E),
+    unstable_cache: (__webpack_require__(4521)/* .unstable_cache */ .A),
+    unstable_revalidateTag: (__webpack_require__(1610)/* .unstable_revalidateTag */ .B),
+    unstable_revalidatePath: (__webpack_require__(3789)/* .unstable_revalidatePath */ .x),
     userAgentFromString: (__webpack_require__(103).userAgentFromString),
     userAgent: (__webpack_require__(103).userAgent)
 };
@@ -5325,6 +6346,9 @@ module.exports = serverExports;
 exports.NextRequest = serverExports.NextRequest;
 exports.NextResponse = serverExports.NextResponse;
 exports.ImageResponse = serverExports.ImageResponse;
+exports.unstable_cache = serverExports.unstable_cache;
+exports.unstable_revalidatePath = serverExports.unstable_revalidatePath;
+exports.unstable_revalidateTag = serverExports.unstable_revalidateTag;
 exports.userAgentFromString = serverExports.userAgentFromString;
 exports.userAgent = serverExports.userAgent;
 exports.URLPattern = serverExports.URLPattern;
