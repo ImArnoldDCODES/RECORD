@@ -1,23 +1,34 @@
+/* eslint-disable react/no-unescaped-entities */
 import Image from "next/image";
 import { NavBar, Footer } from "@/components/index";
 
 export default function Home() {
   return (
-    <main className="relative flex min-h-screen flex-col items-center justify-between px-10 bg-[#333332]">
+    <main className="relative flex min-h-screen flex-col items-center px-10 bg-[#333332]">
       <NavBar />
-      <Footer />
+      {/* <Footer /> */}
       <div className="2xl:w-[80%] w-full">
-        <div className="border-2 border-[#fff]">
-          <div className="w-[80%] h-fit mb-auto mx-auto relative">
-            <h1 className="uppercase border-2 w-fit ">Create</h1>
-            <h1 className="uppercase m-auto border-2 w-fit">Import</h1>
-            <h1 className="uppercase ml-auto border-2 w-fit">Share</h1>
+        <div className="relative">
+          <div className="w-[80%] h-fit mb-auto mx-auto lg:block hidden">
+            <h1 className="uppercase">Create</h1>
+            <h1 className="uppercase m-auto w-fit mt-[-10%]">Import</h1>
+            <h1 className="uppercase ml-auto w-fit  mt-[-10%]">Share</h1>
             <p className="font-montserrat w-[16rem] absolute top-[70%] text-lg">
               Record, Import and share audio as urls to anyone anywhere
             </p>
           </div>
+          <div className="w-[100%] h-fit mb-auto mx-auto  lg:hidden block">
+            <h1 className="uppercase">Create</h1>
+            <h1 className="uppercase m-auto w-fit">Import</h1>
+            <h1 className="uppercase ml-auto w-fit">Share</h1>
+            <p className="font-montserrat w-full text-lg mt-10 text-start">
+              Record, Import and share audio as urls to anyone anywhere. With
+              the use of rcord and it technologies you don't have to worry about
+              large audio or video files in your project
+            </p>
+          </div>
         </div>
-        <div className="w-full mt-10">
+        {/* <div className="w-full mt-10">
           <h3 className="text-5xl uppercase">
             About Us
             <span>
@@ -39,9 +50,9 @@ export default function Home() {
               sint id placeat, explicabo quis eos!
             </h2>
           </div>
-        </div>
+        </div> */}
 
-        <div className="w-full mt-[10rem]">
+        {/* <div className="w-full mt-[10rem]">
           <h3 className="text-5xl uppercase">
             How it works
             <span>
@@ -63,7 +74,7 @@ export default function Home() {
               sint id placeat, explicabo quis eos!
             </h2>
           </div>
-        </div>
+        </div> */}
       </div>
     </main>
   );

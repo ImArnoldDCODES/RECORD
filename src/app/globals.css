@@ -37,7 +37,7 @@ body {
     @apply mt-0 mb-0;
   }
   h1 {
-    @apply font-bold text-[10rem] m-0 p-0 font-anton tracking-widest;
+    @apply font-bold text-[400] lg:text-[10rem] md:text-[7rem] text-[7vh] m-0 p-0 font-anton tracking-wide;
   }
   input {
     @apply bg-[#D9D9D9] text-black

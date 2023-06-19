@@ -39,6 +39,12 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const variables = [
+    montserrat.variable,
+    inter.variable,
+    kanit.variable,
+    anton.variable,
+  ];
   return (
     <html lang="en">
       <body
