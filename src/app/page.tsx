@@ -11,8 +11,8 @@ export default function Home() {
         <div className="relative">
           <div className="w-[80%] h-fit mb-auto mx-auto lg:block hidden">
             <h1 className="uppercase">Create</h1>
-            <h1 className="uppercase m-auto w-fit mt-[-10%]">Import</h1>
-            <h1 className="uppercase ml-auto w-fit  mt-[-10%]">Share</h1>
+            <h1 className="uppercase m-auto w-fit mt-[-5%]">Import</h1>
+            <h1 className="uppercase ml-auto w-fit  mt-[-5%]">Share</h1>
             <p className="font-montserrat w-[16rem] absolute top-[70%] text-lg">
               Record, Import and share audio as urls to anyone anywhere
             </p>
@@ -23,7 +23,7 @@ export default function Home() {
             <h1 className="uppercase ml-auto w-fit">Share</h1>
             <p className="font-montserrat w-full text-lg mt-10 text-start">
               Record, Import and share audio as urls to anyone anywhere. With
-              the use of rcord and it technologies you don't have to worry about
+              the use of rcord and it's technologies you don't have to worry about
               large audio or video files in your project
             </p>
           </div>

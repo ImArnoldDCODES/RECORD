@@ -13,24 +13,24 @@ export default function Index() {
         <h5 className="absolute right-0 bottom-0 m-4">
           Don't have an account?{" "}
           <span className="text-[#595757] hover:text-[#adadad] cursor-pointer">
-            <Link href="/signup"> Sign Up </Link>
+            <Link href="/signup"> Sign Up</Link>
           </span>
         </h5>
-        <div className="lg:w-[60%] w-[80%] m-auto mt-10">
+        <div className="lg:w-[60%] w-[80%] h-fit m-auto">
           <h2 className="lg:text-6xl text-4xl text-center">Sign In</h2>
           <form className="flex flex-col mt-10">
             <label className="mb-2">Email</label>
             <input
               type="email"
-              className="w-full sm:w-[70%] lg:w-[70%] h-[2rem] pl-2 mb-5 rounded"
+              className="w-full mb-5 rounded"
             />
             <label className="mb-2">Password</label>
             <input
               type="password"
-              className="w-full sm:w-[70%] lg:w-[70%] h-[2rem] pl-2 rounded"
+              className="w-full rounded"
             />
             <div className="mt-10">
-              <button className="bg-[#747976] px-5 py-1 rounded">
+              <button className="bg-[#747976] px-5 py-1 rounded font-kanit">
                 Sign In
               </button>
             </div>
