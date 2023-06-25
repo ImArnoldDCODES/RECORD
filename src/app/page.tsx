@@ -11,8 +11,8 @@ export default function Home() {
         <div className="relative">
           <div className="w-[80%] h-fit mb-auto mx-auto lg:block hidden">
             <h1 className="uppercase">Create</h1>
-            <h1 className="uppercase m-auto w-fit mt-[-5%]">Import</h1>
-            <h1 className="uppercase ml-auto w-fit  mt-[-5%]">Share</h1>
+            <h1 className="uppercase m-auto w-fit mt-[-8%]">Import</h1>
+            <h1 className="uppercase ml-auto w-fit  mt-[-8%]">Share</h1>
             <p className="font-montserrat w-[16rem] absolute top-[70%] text-lg">
               Record, Import and share audio as urls to anyone anywhere
             </p>
