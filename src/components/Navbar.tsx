@@ -6,9 +6,9 @@ export default function Navbar() {
       <span className="text-3xl font-kanit font-bold cursor-pointer">
         <Link href="/">R.</Link>
       </span>
-      <Link href="/signin">
+      <Link href="/dashboard">
         <button className="bg-[#747976] font-kanit rounded px-5 py-1 cursor-pointer hover:brightness-75">
-          Log In
+          Get Started
         </button>
       </Link>
     </div>

@@ -2,7 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-
 :root {
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 214, 219, 220;
@@ -40,6 +39,16 @@ body {
     @apply font-bold text-[400] lg:text-[10rem] md:text-[7rem] text-[7vh] m-0 p-0 font-anton tracking-wide;
   }
   input {
-    @apply bg-[#D9D9D9] text-black pl-2 h-[2rem] outline-none
+    @apply bg-[#D9D9D9] text-black pl-2 h-[2rem] outline-none;
+  }
+}
+
+@layer utilities {
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
   }
 }

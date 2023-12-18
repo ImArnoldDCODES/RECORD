@@ -3,7 +3,8 @@ import { Inter, Kanit, Anton, Montserrat } from "next/font/google";
 
 export const metadata = {
   title: "Rcord",
-  description: "Record, Import and Share large audio or video files using url's",
+  description:
+    "Record, Import and Share large audio or video files using url's",
 };
 
 export const inter = Inter({
@@ -22,7 +23,7 @@ export const kanit = Kanit({
 
 export const anton = Anton({
   weight: ["400"],
-  subsets: ["vietnamese"],
+  subsets: ["latin"],
   display: "swap",
   variable: "--font-anton",
 });
