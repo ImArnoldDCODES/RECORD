@@ -8,27 +8,35 @@ export default function Index() {
   const [storeText, setStoreText] = useState<string>();
   const [audio, setAudio] = useState<string>();
   const [gender, setGender] = useState<string>();
+  const [lan, setLan] = useState<string>();
 
   const GenderOption = [
-    { value: "Male", label: "Male" },
-    { value: "Female", label: "Female" },
+    { value: "MALE", label: "Male" },
+    { value: "FEMALE", label: "Female" },
+  ];
+
+  const LanguagueOption = [
+    { value: "eng", label: "English" },
+    { value: "fr", label: "French" },
+    { value: "spa", label: "Spanish" },
   ];
 
   const handleFunction = (e: React.FormEvent) => {
     e.preventDefault();
+    console.log(lan, gender);
     axios
       .post(
         "https://api.edenai.run/v2/audio/text_to_speech",
         {
           providers: "amazon,google,ibm,microsoft",
-          language: "eng",
+          language: lan,
           text: storeText,
-          option: "MALE",
+          option: gender,
           fallback_providers: "",
         },
         {
           headers: {
-            authorization: `Bearer ${process.env.TOKEN}`,
+            authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiMTVkNDRkMmYtMDk4ZC00ZTYxLTk3Y2UtODVhYmI4OTcyNWZhIiwidHlwZSI6ImFwaV90b2tlbiJ9.WiiTdKaENJf3WsRwa_4ST16OJbdz3CJzoGkQ0wBBPRQ`,
           },
         }
       )
@@ -42,8 +50,6 @@ export default function Index() {
   };
 
   // console.log(process.env.TOKEN, "hello")
-
-
 
   return (
     <main className="relative flex min-h-screen flex-col items-center px-10 bg-[#333332]">
@@ -70,9 +76,9 @@ export default function Index() {
 
             <Dropdown
               name="Languague"
-              options={GenderOption}
+              options={LanguagueOption}
               title="Select Languague"
-              onChange={(option) => setGender(option.target.value)}
+              onChange={(option) => setLan(option.target.value)}
             />
           </div>
           <button
