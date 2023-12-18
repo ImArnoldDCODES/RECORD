@@ -26,14 +26,14 @@ const Index: React.FC<SelectProps> = ({
 }) => {
   return (
     <div>
-      <label className="mb-5 text-sm font-medium capitalize text-white">
+      <label className="text-sm font-medium capitalize text-white">
         {title}
       </label>
       <select
         name={name}
         value={value}
         onChange={onChange}
-        className={`bg-[#454545] block w-full rounded-md shadow-sm outline-none text-white py-2 ${className}`}
+        className={`bg-[#454545] block w-full rounded-md shadow-sm outline-none text-white my-2 py-2 ${className}`}
         disabled={disabled}
       >
         {options.map((option) => (

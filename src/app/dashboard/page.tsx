@@ -5,7 +5,7 @@ export default function Index() {
     <main className="relative flex min-h-screen flex-col px-10 bg-[#333332]">
       <h2 className="text-[5em]">/Tech</h2>
       <hr />
-      <div className="mt-10 h-full grid grid-cols-3 gap-4">
+      <div className="mt-10 h-full grid md:grid-cols-3 gap-4">
         <div className="bg-[#70706f] hover:bg-[#474746] cursor-pointer py-4 px-6 rounded-lg">
           <h3 className="text-[2em]">Text-to-Speech</h3>
           <h5 className="text-[1em]">

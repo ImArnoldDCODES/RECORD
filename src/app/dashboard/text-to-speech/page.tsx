@@ -29,9 +29,9 @@ export default function Index() {
         "https://api.edenai.run/v2/audio/text_to_speech",
         {
           providers: "amazon,google,ibm,microsoft",
-          language: lan,
+          language: !lan ? "eng" : lan,
           text: storeText,
-          option: gender,
+          option: !gender ? "MALE" : gender,
           fallback_providers: "",
         },
         {
@@ -53,10 +53,10 @@ export default function Index() {
 
   return (
     <main className="relative flex min-h-screen flex-col items-center px-10 bg-[#333332]">
-      <h2 className="text-[5em] mr-auto">/Text-to-Speech</h2>
+      <h2 className="md:text-[5em] text-[3em] mr-auto">/Text-to-Speech</h2>
       <hr className="w-full" />
-      <section className="w-[100%] h-[80svh] flex justify-between">
-        <div className="border-2 border-[#757474] rounded h-[50%] w-[50%] my-auto bg-[#303030]">
+      <section className="w-[100%] h-[80svh] flex flex-col md:flex-row justify-between mt-[5%] md:mt-0">
+        <div className="border-2 border-[#757474] rounded h-[50%] md:w-[50%] md:my-auto bg-[#303030]">
           <textarea
             className="w-[100%] h-[100%] bg-transparent px-3 py-5 no-scrollbar"
             onChange={(e) => setStoreText(e.target.value)}
@@ -65,7 +65,7 @@ export default function Index() {
             id="text"
           ></textarea>
         </div>
-        <div className="h-[50%] w-[35%] my-auto flex flex-col gap-5">
+        <div className="h-[50%] md:w-[35%] md:my-auto flex flex-col gap-5 mt-[4rem]">
           <div>
             <Dropdown
               name="Gender"
