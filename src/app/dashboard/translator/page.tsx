@@ -10,6 +10,7 @@ export default function Index() {
   const [toLan, setToLan] = useState<string>();
   const [value, setValue] = useState<string>();
   const [btnText, setBtnText] = useState<string>("Copy");
+  const [isLoading, setIsLoading] = useState<string>();
 
   const languages = [
     // { value: "auto detection", label: "Auto detection" },
@@ -19,28 +20,32 @@ export default function Index() {
 
   const handleSwitch = (e: React.FormEvent) => {
     e.preventDefault();
-    axios
-      .post(
-        "https://api.edenai.run/v2/translation/automatic_translation",
-        {
-          providers: "amazon,google,ibm,microsoft",
-          text: text,
-          source_language: fromLan,
-          target_language: toLan,
-          fallback_providers: "",
-        },
-        {
-          headers: {
-            authorization: `Bearer ${process.env.TOKEN}`,
+    try {
+      axios
+        .post(
+          "https://api.edenai.run/v2/translation/automatic_translation",
+          {
+            providers: "amazon,google,ibm,microsoft",
+            text: text,
+            source_language: fromLan,
+            target_language: toLan,
+            fallback_providers: "",
           },
-        }
-      )
-      .then((res) => {
-        setValue(res?.data?.google?.text);
-      })
-      .catch((err) => {
-        console.log(err, "error");
-      });
+          {
+            headers: {
+              authorization: `Bearer ${process.env.TOKEN}`,
+            },
+          }
+        )
+        .then((res) => {
+          setIsLoading("loading");
+          setIsLoading("");
+          setValue(res?.data?.google?.text);
+        });
+        setIsLoading("loading");
+    } catch (e) {
+      console.log(e, "error");
+    }
   };
 
   const handleCopyClick = () => {
@@ -79,8 +84,8 @@ export default function Index() {
             Translate
           </button>
         </div>
-        <section className="w-[100%] h-[60svh] flex flex-col lg:flex-row justify-between gap-y-20">
-          <div className="h-[70%] lg:w-[45%] md:my-auto flex flex-col gap-5 mt-[4rem] border-2 border-[#747976] rounded">
+        <section className="w-[100%] lg:h-[60svh] flex flex-col lg:flex-row justify-between gap-y-20 mt-16 lg:mt-0">
+          <div className="h-[15rem] lg:h-[70%] lg:w-[45%] md:my-auto flex flex-col gap-5 border-2 border-[#747976] rounded">
             <textarea
               className="w-[100%] h-[100%] bg-transparent px-3 py-5 no-scrollbar"
               placeholder="Input text"
@@ -89,16 +94,16 @@ export default function Index() {
               onChange={(e) => setText(e.target.value)}
             ></textarea>
           </div>
-          <div className="border-2 border-[#757474] rounded h-[70%] lg:w-[40%] md:my-auto bg-[#747976] relative">
+          <div className="border-2 border-[#757474] rounded h-[15rem] lg:h-[70%] lg:w-[40%] md:my-auto bg-[#747976] relative mb-10">
             <textarea
               className="w-[100%] h-[100%] bg-transparent px-3 py-5 no-scrollbar"
               placeholder=""
               name="text"
               id="text"
-              value={value}
+              value={isLoading === "loading" ? "Loading..." : value}
             ></textarea>
             <button
-              className="absolute right-[1rem] bottom-[1rem] bg-[#747976] hover:bg-[#454545] rounded px-4 h-[12%] mt-5 text-l"
+              className="absolute right-[1rem] lg:bottom-[1rem] bottom-[0.4rem] bg-[#747976] hover:bg-[#454545] rounded px-4 py-3 mt-5 text-l"
               onClick={handleCopyClick}
             >
               {btnText}
