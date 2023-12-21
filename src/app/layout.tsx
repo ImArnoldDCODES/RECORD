@@ -7,28 +7,28 @@ export const metadata = {
     "Record, Import and Share large audio or video files using url's",
 };
 
-export const inter = Inter({
+const inter = Inter({
   weight: ["200", "400", "700"],
   subsets: ["latin"],
   display: "swap",
   variable: "--font-inter",
 });
 
-export const kanit = Kanit({
+const kanit = Kanit({
   weight: ["400", "700"],
   subsets: ["thai"],
   display: "swap",
   variable: "--font-kanit",
 });
 
-export const anton = Anton({
+const anton = Anton({
   weight: ["400"],
   subsets: ["latin"],
   display: "swap",
   variable: "--font-anton",
 });
 
-export const montserrat = Montserrat({
+const montserrat = Montserrat({
   weight: ["400"],
   subsets: ["latin"],
   display: "swap",
@@ -56,3 +56,5 @@ export default function RootLayout({
     </html>
   );
 }
+
+export { montserrat, anton, kanit, inter };
