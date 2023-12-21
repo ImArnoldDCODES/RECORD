@@ -79,8 +79,8 @@ export default function Index() {
             Translate
           </button>
         </div>
-        <section className="w-[100%] h-[60svh] flex flex-col lg:flex-row justify-between gap-y-20">
-          <div className="h-[70%] lg:w-[45%] md:my-auto flex flex-col gap-5 mt-[4rem] border-2 border-[#747976] rounded">
+        <section className="w-[100%] lg:h-[60svh] flex flex-col lg:flex-row justify-between gap-y-20 mt-16 lg:mt-0">
+          <div className="h-[15rem] lg:h-[70%] lg:w-[45%] md:my-auto flex flex-col gap-5 border-2 border-[#747976] rounded">
             <textarea
               className="w-[100%] h-[100%] bg-transparent px-3 py-5 no-scrollbar"
               placeholder="Input text"
@@ -89,7 +89,7 @@ export default function Index() {
               onChange={(e) => setText(e.target.value)}
             ></textarea>
           </div>
-          <div className="border-2 border-[#757474] rounded h-[70%] lg:w-[40%] md:my-auto bg-[#747976] relative">
+          <div className="border-2 border-[#757474] rounded h-[15rem] lg:h-[70%] lg:w-[40%] md:my-auto bg-[#747976] relative mb-10">
             <textarea
               className="w-[100%] h-[100%] bg-transparent px-3 py-5 no-scrollbar"
               placeholder=""
@@ -98,7 +98,7 @@ export default function Index() {
               value={value}
             ></textarea>
             <button
-              className="absolute right-[1rem] bottom-[1rem] bg-[#747976] hover:bg-[#454545] rounded px-4 h-[12%] mt-5 text-l"
+              className="absolute right-[1rem] lg:bottom-[1rem] bottom-[0.4rem] bg-[#747976] hover:bg-[#454545] rounded px-4 py-3 mt-5 text-l"
               onClick={handleCopyClick}
             >
               {btnText}
