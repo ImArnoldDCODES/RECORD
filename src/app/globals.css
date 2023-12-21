@@ -26,6 +26,10 @@ body {
     rgb(var(--background-start-rgb));
 }
 
+body::-webkit-scrollbar{
+  display: none;
+}
+
 @layer base {
   h1,
   h2,
@@ -33,13 +37,22 @@ body {
   h4,
   h5,
   h6 {
-    @apply mt-0 mb-0;
+    @apply m-0 m-0;
   }
   h1 {
     @apply font-bold text-[400] lg:text-[10rem] md:text-[7rem] text-[7vh] m-0 p-0 font-anton tracking-wide;
   }
+  h2{
+    @apply font-bold text-[400] m-0 p-0 font-kanit tracking-wide;
+  }
   input {
     @apply bg-[#D9D9D9] text-black pl-2 h-[2rem] outline-none;
+  }
+  textarea{
+    @apply font-kanit
+  }
+  button{
+    @apply font-bold text-[400] font-montserrat
   }
 }
 

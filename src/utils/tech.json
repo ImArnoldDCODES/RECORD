@@ -7,12 +7,12 @@
     {
         "title": "Speech-to-Text",
         "desc": "A STT platform that gives you the ability to experiment on different        options to give you a disered text feedback",
-        "href": "/dashboard/coming-soon"
+        "href": "/dashboard/speech-to-text"
     },
     {
         "title": "Translator",
         "desc": "Transalte from english to any languague. Translate from any languague too",
-        "href": "/dashboard/coming-soon"
+        "href": "/dashboard/translator"
     },
     {
         "title": "Feed AI",

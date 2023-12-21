@@ -5,7 +5,7 @@ import React, { useState } from "react";
 import { Dropdown } from "@/components";
 
 export default function Index() {
-  const [storeText, setStoreText] = useState<string>();
+  const [storeText, setStoreText] = useState<string>("");
   const [audio, setAudio] = useState<string>();
   const [gender, setGender] = useState<string>();
   const [lan, setLan] = useState<string>();
@@ -23,7 +23,6 @@ export default function Index() {
 
   const handleFunction = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log(lan, gender);
     axios
       .post(
         "https://api.edenai.run/v2/audio/text_to_speech",
@@ -36,7 +35,7 @@ export default function Index() {
         },
         {
           headers: {
-            authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiMTVkNDRkMmYtMDk4ZC00ZTYxLTk3Y2UtODVhYmI4OTcyNWZhIiwidHlwZSI6ImFwaV90b2tlbiJ9.WiiTdKaENJf3WsRwa_4ST16OJbdz3CJzoGkQ0wBBPRQ`,
+            authorization: `Bearer ${process.env.TOKEN}`,
           },
         }
       )
@@ -45,11 +44,9 @@ export default function Index() {
         setAudio(audioUrl);
       })
       .catch((error) => {
-        console.log(error);
+        console.log(error, "error");
       });
   };
-
-  // console.log(process.env.TOKEN, "hello")
 
   return (
     <main className="relative flex min-h-screen flex-col items-center px-10 bg-[#333332]">
@@ -65,7 +62,7 @@ export default function Index() {
             id="text"
           ></textarea>
         </div>
-        <div className="h-[50%] md:w-[35%] md:my-auto flex flex-col gap-5 mt-[4rem]">
+        <div className="h-[70%] md:w-[35%] md:my-auto flex flex-col gap-5 mt-[4rem]">
           <div>
             <Dropdown
               name="Gender"
@@ -84,12 +81,18 @@ export default function Index() {
           <button
             className="bg-[#454545] rounded py-3 text-2xl"
             onClick={handleFunction}
+            disabled={storeText?.trim().length === 0 ? true : false}
           >
             Generate Audio
           </button>
 
           {audio ? (
-            <audio className="w-[100%]" src={audio} autoPlay controls />
+            <audio
+              className="w-[100%] h-[4rem]"
+              src={audio}
+              autoPlay
+              controls
+            />
           ) : null}
         </div>
       </section>
