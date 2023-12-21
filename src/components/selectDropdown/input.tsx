@@ -33,7 +33,7 @@ const Index: React.FC<SelectProps> = ({
         name={name}
         value={value}
         onChange={onChange}
-        className={`bg-[#454545] block w-full rounded-md shadow-sm outline-none text-white my-2 py-2 font-anton ${className}`}
+        className={`bg-[#454545] block w-full rounded-md shadow-sm outline-none text-white my-2 py-2 font-inter ${className}`}
         disabled={disabled}
       >
         {options.map((option) => (
