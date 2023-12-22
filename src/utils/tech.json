@@ -1,13 +1,13 @@
 [
     {
         "title": "Text-to-Speech",
-        "desc": "A TTS platform that gives you the ability to experiment on different      options to give you a disered speech feedbac",
+        "desc": "A TTS platform that gives you the ability to experiment on different options to give you a disered speech feedbac",
         "href": "/dashboard/text-to-speech"
     },
     {
         "title": "Speech-to-Text",
-        "desc": "A STT platform that gives you the ability to experiment on different        options to give you a disered text feedback",
-        "href": "/dashboard/speech-to-text"
+        "desc": "A STT platform that gives you the ability to experiment on different options to give you a disered text feedback",
+        "href": "/dashboard/coming-soon"
     },
     {
         "title": "Translator",

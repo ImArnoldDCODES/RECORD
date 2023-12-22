@@ -1,8 +1,8 @@
 "use client";
 
-import axios from "axios";
 import React, { useState } from "react";
 import { Dropdown } from "@/components";
+import { axios } from "@/utils";
 
 export default function Index() {
   const [text, setText] = useState<string>();
@@ -10,6 +10,7 @@ export default function Index() {
   const [toLan, setToLan] = useState<string>();
   const [value, setValue] = useState<string>();
   const [btnText, setBtnText] = useState<string>("Copy");
+  const [isLoading, setIsLoading] = useState<string>();
 
   const languages = [
     // { value: "auto detection", label: "Auto detection" },
@@ -19,28 +20,24 @@ export default function Index() {
 
   const handleSwitch = (e: React.FormEvent) => {
     e.preventDefault();
-    axios
-      .post(
-        "https://api.edenai.run/v2/translation/automatic_translation",
-        {
+    try {
+      axios
+        .post("translation/automatic_translation", {
           providers: "amazon,google,ibm,microsoft",
           text: text,
           source_language: fromLan,
           target_language: toLan,
           fallback_providers: "",
-        },
-        {
-          headers: {
-            authorization: `Bearer ${process.env.TOKEN}`,
-          },
-        }
-      )
-      .then((res) => {
-        setValue(res?.data?.google?.text);
-      })
-      .catch((err) => {
-        console.log(err, "error");
-      });
+        })
+        .then((res) => {
+          setIsLoading("loading");
+          setIsLoading("");
+          setValue(res?.data?.google?.text);
+        });
+      setIsLoading("loading");
+    } catch (e) {
+      console.log(e, "error");
+    }
   };
 
   const handleCopyClick = () => {
@@ -95,7 +92,7 @@ export default function Index() {
               placeholder=""
               name="text"
               id="text"
-              value={value}
+              value={isLoading === "loading" ? "Loading..." : value}
             ></textarea>
             <button
               className="absolute right-[1rem] lg:bottom-[1rem] bottom-[0.4rem] bg-[#747976] hover:bg-[#454545] rounded px-4 py-3 mt-5 text-l"

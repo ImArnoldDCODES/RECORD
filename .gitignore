@@ -11,8 +11,14 @@
 # next.js
 /.next/
 
+<<<<<<< HEAD
+# # production
+# /build
+# /out
+=======
 # production
 
+>>>>>>> 29911b6ca063597456b6529242be5f306fce3d26
 
 # misc
 .DS_Store

@@ -1,14 +1,15 @@
 "use client";
 
-import axios from "axios";
 import React, { useState } from "react";
 import { Dropdown } from "@/components";
+import { axios } from "@/utils";
 
 export default function Index() {
   const [storeText, setStoreText] = useState<string>("");
   const [audio, setAudio] = useState<string>();
   const [gender, setGender] = useState<string>();
   const [lan, setLan] = useState<string>();
+  const [isLoading, setIsLoading] = useState<string>();
 
   const GenderOption = [
     { value: "MALE", label: "Male" },
@@ -23,29 +24,24 @@ export default function Index() {
 
   const handleFunction = (e: React.FormEvent) => {
     e.preventDefault();
-    axios
-      .post(
-        "https://api.edenai.run/v2/audio/text_to_speech",
-        {
+    try {
+      axios
+        .post("audio/text_to_speech", {
           providers: "amazon,google,ibm,microsoft",
           language: !lan ? "eng" : lan,
           text: storeText,
           option: !gender ? "MALE" : gender,
           fallback_providers: "",
-        },
-        {
-          headers: {
-            authorization: `Bearer ${process.env.TOKEN}`,
-          },
-        }
-      )
-      .then((res) => {
-        const audioUrl = res?.data.microsoft.audio_resource_url;
-        setAudio(audioUrl);
-      })
-      .catch((error) => {
-        console.log(error, "error");
-      });
+        })
+        .then((res) => {
+          setIsLoading("");
+          const audioUrl = res?.data.microsoft.audio_resource_url;
+          setAudio(audioUrl);
+        });
+      setIsLoading("loading");
+    } catch (e) {
+      console.log(e, "error");
+    }
   };
 
   return (
@@ -86,14 +82,16 @@ export default function Index() {
             Generate Audio
           </button>
 
-          {audio ? (
+          {isLoading === "loading" ? (
+            <h2>Loading...</h2>
+          ) : (
             <audio
-              className="w-[100%] h-[4rem]"
+              className={audio ? "w-[100%] h-[4rem]" : "hidden"}
               src={audio}
               autoPlay
               controls
             />
-          ) : null}
+          )}
         </div>
       </section>
     </main>
