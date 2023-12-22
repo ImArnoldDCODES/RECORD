@@ -1,19 +1,23 @@
 "use client";
 
-import React, { useState, ChangeEvent, FormEvent } from "react";
+import React, { useState, useRef, ChangeEvent, FormEvent } from "react";
 import { axios } from "@/utils";
 import FormData from "form-data";
 
 export default function Index() {
   const [file, setFile] = useState<File | null>(null);
+  const [code, setCode] = useState<string>();
+  const [text, setText] = useState<string>();
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   const handleFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
-    const selectedFile = e.target.files?.[0];
+    const selectedFile = e.target.files?.[0] || null;
     setFile(selectedFile);
   };
 
   const handleSwitch = async (e: FormEvent) => {
     e.preventDefault();
+    fileInputRef?.current?.click();
 
     try {
       if (!file) {
@@ -31,9 +35,20 @@ export default function Index() {
         },
       });
 
-      console.log(response.data);
+      setCode(response.data.public_id);
     } catch (error: any) {
       console.error(error.message);
+    }
+  };
+
+  const handleGetAudio = async () => {
+    {
+      try {
+        const response = await axios.get(`audio/speech_to_text_async/${code}`);
+        setText(response?.data?.results?.voci?.text);
+      } catch (e) {
+        console.log(e, "error");
+      }
     }
   };
 
@@ -43,20 +58,34 @@ export default function Index() {
       <hr className="w-full" />
       <section className="w-[100%] h-[80svh] flex flex-col md:flex-row justify-between mt-[5%] md:mt-0">
         <div className="h-[50%] md:w-[35%] md:my-auto flex flex-col gap-5 mt-[4rem]">
-          <input type="file" accept="audio/*" onChange={handleFileChange} />
+          <input
+            type="file"
+            accept="audio/*"
+            onChange={handleFileChange}
+            ref={fileInputRef}
+            style={{ display: "none" }}
+          />
           <button
             className="bg-[#454545] rounded py-3 text-2xl"
             onClick={handleSwitch}
           >
             Import Audio
           </button>
+          <button
+            className={!code ? "hidden" : "bg-[#454545] rounded py-3 text-2xl"}
+            onClick={handleGetAudio}
+          >
+            Generate Text
+          </button>
         </div>
-        <div className="border-2 border-[#757474] rounded h-[50%] md:w-[50%] md:my-auto bg-[#303030]">
+        <div className="border-2 border-[#757474] rounded h-[50%] md:w-[50%] md:my-auto bg-[#747976]">
           <textarea
             className="w-[100%] h-[100%] bg-transparent px-3 py-5 no-scrollbar"
             placeholder="Input text"
             name="text"
             id="text"
+            disabled
+            value={text}
           ></textarea>
         </div>
       </section>
