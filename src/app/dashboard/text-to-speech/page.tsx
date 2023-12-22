@@ -1,8 +1,8 @@
 "use client";
 
-import axios from "axios";
 import React, { useState } from "react";
 import { Dropdown } from "@/components";
+import { axios } from "@/utils";
 
 export default function Index() {
   const [storeText, setStoreText] = useState<string>("");
@@ -26,21 +26,13 @@ export default function Index() {
     e.preventDefault();
     try {
       axios
-        .post(
-          "https://api.edenai.run/v2/audio/text_to_speech",
-          {
-            providers: "amazon,google,ibm,microsoft",
-            language: !lan ? "eng" : lan,
-            text: storeText,
-            option: !gender ? "MALE" : gender,
-            fallback_providers: "",
-          },
-          {
-            headers: {
-              authorization: `Bearer ${process.env.TOKEN}`,
-            },
-          }
-        )
+        .post("audio/text_to_speech", {
+          providers: "amazon,google,ibm,microsoft",
+          language: !lan ? "eng" : lan,
+          text: storeText,
+          option: !gender ? "MALE" : gender,
+          fallback_providers: "",
+        })
         .then((res) => {
           setIsLoading("");
           const audioUrl = res?.data.microsoft.audio_resource_url;

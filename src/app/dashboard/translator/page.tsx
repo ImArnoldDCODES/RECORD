@@ -1,8 +1,8 @@
 "use client";
 
-import axios from "axios";
 import React, { useState } from "react";
 import { Dropdown } from "@/components";
+import { axios } from "@/utils";
 
 export default function Index() {
   const [text, setText] = useState<string>();
@@ -22,27 +22,19 @@ export default function Index() {
     e.preventDefault();
     try {
       axios
-        .post(
-          "https://api.edenai.run/v2/translation/automatic_translation",
-          {
-            providers: "amazon,google,ibm,microsoft",
-            text: text,
-            source_language: fromLan,
-            target_language: toLan,
-            fallback_providers: "",
-          },
-          {
-            headers: {
-              authorization: `Bearer ${process.env.TOKEN}`,
-            },
-          }
-        )
+        .post("translation/automatic_translation", {
+          providers: "amazon,google,ibm,microsoft",
+          text: text,
+          source_language: fromLan,
+          target_language: toLan,
+          fallback_providers: "",
+        })
         .then((res) => {
           setIsLoading("loading");
           setIsLoading("");
           setValue(res?.data?.google?.text);
         });
-        setIsLoading("loading");
+      setIsLoading("loading");
     } catch (e) {
       console.log(e, "error");
     }
