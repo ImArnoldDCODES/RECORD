@@ -33,7 +33,7 @@ export default function Index() {
             </span>
           </div>
 
-          <div className="border-2 border-[#70706f] bg-[#232323] w-[fit-content] h-[fit-content]  md:max-w-[55%] sm:max-w-[80%] max-w-[90%] px-5 py-3 ml-auto rounded-lg">
+          {/* <div className="border-2 border-[#70706f] bg-[#232323] w-[fit-content] h-[fit-content]  md:max-w-[55%] sm:max-w-[80%] max-w-[90%] px-5 py-3 ml-auto rounded-lg">
             <span>Define SSR</span>
           </div>
 
@@ -71,7 +71,7 @@ export default function Index() {
               of the box and simplifies the implementation of Server-Side
               Rendering for React applications.
             </span>
-          </div>
+          </div> */}
         </div>
         <div className="w-full h-[fit] mt-auto">
           <textarea
