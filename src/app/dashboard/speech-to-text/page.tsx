@@ -1,24 +1,16 @@
 "use client";
 
-import React, { useState, useRef, ChangeEvent, FormEvent } from "react";
+import React, { useState, useRef, ChangeEvent } from "react";
 import { axios } from "@/utils";
 import FormData from "form-data";
 
 export default function Index() {
-  const [file, setFile] = useState<File | null>(null);
   const [code, setCode] = useState<string>();
   const [text, setText] = useState<string>();
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   const handleFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
-    const selectedFile = e.target.files?.[0] || null;
-    setFile(selectedFile);
-  };
-
-  const handleSwitch = async (e: FormEvent) => {
-    e.preventDefault();
-    fileInputRef?.current?.click();
-
+    const file = e.target.files?.[0] || null;
     try {
       if (!file) {
         throw new Error("No file selected");
@@ -67,7 +59,7 @@ export default function Index() {
           />
           <button
             className="bg-[#454545] rounded py-3 text-2xl"
-            onClick={handleSwitch}
+            onClick={() => fileInputRef?.current?.click()}
           >
             Import Audio
           </button>

@@ -15,7 +15,7 @@ export default async function Index() {
   }
 
   return (
-    <main className="relative flex min-h-screen flex-col px-10 bg-[#333332]">
+    <main className="relative flex min-h-screen flex-col px-10 bg-[#333332] scroll-auto">
       <h2 className="text-[5em]">/Tech</h2>
       <hr />
       <div className="mt-10 mb-10 lg:mb-0 h-full grid md:grid-cols-3 gap-4">

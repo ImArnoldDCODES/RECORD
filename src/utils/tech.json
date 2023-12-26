@@ -7,7 +7,7 @@
     {
         "title": "Speech-to-Text",
         "desc": "A STT platform that gives you the ability to experiment on different options to give you a disered text feedback",
-        "href": "/dashboard/coming-soon"
+        "href": "/dashboard/speech-to-text"
     },
     {
         "title": "Translator",
@@ -17,6 +17,6 @@
     {
         "title": "Feed AI",
         "desc": "Get instant feedback on questions with Feed Ai. With Feed ai you can chat and interact giving you 100% generated ai response",
-        "href": "/dashboard/coming-soon"
+        "href": "/dashboard/feed-ai"
     }
 ]
