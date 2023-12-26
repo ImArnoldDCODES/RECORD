@@ -15,29 +15,29 @@ export default function Index() {
       <hr className="w-full" />
       <section className="relative w-full min-h-full mt-5 flex flex-col">
         <div className="overflow-auto flex flex-col gap-10 h-[70vh] mb-5 no-scrollbar">
-          <div className="border-2 border-[#70706f] bg-[#232323] w-[fit-content] h-[fit-content]  px-5 py-3 ml-auto rounded-lg">
+          <div className="border-2 border-[#70706f] bg-[#232323] w-[fit-content] h-[fit-content]  md:max-w-[55%] sm:max-w-[80%] max-w-[90%] px-5 py-3 ml-auto rounded-lg">
             <span>
               What are the resources i need to create a chat bot ai system in
               next js
             </span>
           </div>
 
-          <div className="border-2 border-[#70706f] bg-[#232323] w-[fit-content] h-[fit-content] max-w-[55%] px-5 py-3 mr-auto rounded-lg">
+          <div className="border-2 border-[#70706f] bg-[#232323] w-[fit-content] h-[fit-content] md:max-w-[55%] sm:max-w-[80%] max-w-[90%] px-5 py-3 mr-auto rounded-lg">
             <span>
               Creating a chatbot AI system with Next.js involves several
               components, including front-end development for the user
               interface, back-end development for handling the bot logic, and
               integration with a natural language processing (NLP) service for
-              understanding user input. Here's a general guide and the key
+              understanding user input. {`Here's`} a general guide and the key
               resources you might need:
             </span>
           </div>
 
-          <div className="border-2 border-[#70706f] bg-[#232323] w-[fit-content] h-[fit-content]  px-5 py-3 ml-auto rounded-lg">
+          <div className="border-2 border-[#70706f] bg-[#232323] w-[fit-content] h-[fit-content]  md:max-w-[55%] sm:max-w-[80%] max-w-[90%] px-5 py-3 ml-auto rounded-lg">
             <span>Define SSR</span>
           </div>
 
-          <div className="border-2 border-[#70706f] bg-[#232323] w-[fit-content] h-[fit-content] md:max-w-[55%] max-w-[80%] px-5 py-3 mr-auto rounded-lg">
+          <div className="border-2 border-[#70706f] bg-[#232323] w-[fit-content] h-[fit-content] md:max-w-[55%] sm:max-w-[80%] max-w-[90%] px-5 py-3 mr-auto rounded-lg">
             <span>
               SSR stands for Server-Side Rendering, which is a technique used in
               web development to improve the performance and SEO (Search Engine
