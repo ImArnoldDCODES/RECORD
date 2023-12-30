@@ -1,12 +1,14 @@
 "use client";
 
-import React, { useState, useRef, ChangeEvent } from "react";
 import { axios } from "@/utils";
 import FormData from "form-data";
+import { ChangeEvent, useRef, useState } from "react";
 
 export default function Index() {
   const [code, setCode] = useState<string>();
   const [text, setText] = useState<string>();
+  const [isLoading, setIsLoading] = useState<string>();
+  const [btnText, setBtnText] = useState<string>("Copy");
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   const handleFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
@@ -36,12 +38,26 @@ export default function Index() {
   const handleGetAudio = async () => {
     {
       try {
-        const response = await axios.get(`audio/speech_to_text_async/${code}`);
-        setText(response?.data?.results?.voci?.text);
+        setIsLoading("loading");
+        await axios.get(`audio/speech_to_text_async/${code}`).then((res) => {
+          setText(res?.data?.results?.voci?.text);
+          setIsLoading("");
+        });
       } catch (e) {
         console.log(e, "error");
       }
     }
+  };
+
+  console.log(isLoading, "loading");
+
+  const handleCopyClick = () => {
+    navigator.clipboard.writeText(text ?? "");
+    setBtnText("Copied");
+
+    setTimeout(() => {
+      setBtnText("Copy");
+    }, 2000);
   };
 
   return (
@@ -70,15 +86,21 @@ export default function Index() {
             Generate Text
           </button>
         </div>
-        <div className="border-2 border-[#757474] rounded h-[50%] md:w-[50%] md:my-auto bg-[#747976]">
+        <div className="border-2 border-[#757474] rounded h-[50%] md:w-[50%] md:my-auto bg-[#747976] relative">
           <textarea
             className="w-[100%] h-[100%] bg-transparent px-3 py-5 no-scrollbar"
-            placeholder="Input text"
+            placeholder=""
             name="text"
             id="text"
             disabled
-            value={text}
+            value={isLoading === "loading" ? isLoading : text}
           ></textarea>
+          <button
+            className="absolute right-[1rem] lg:bottom-[1rem] bottom-[0.4rem] bg-[#747976] hover:bg-[#454545] rounded px-4 py-3 mt-5 text-l"
+            onClick={handleCopyClick}
+          >
+            {btnText}
+          </button>
         </div>
       </section>
     </main>

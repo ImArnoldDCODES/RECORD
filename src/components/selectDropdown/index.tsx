@@ -1,4 +1,6 @@
-import React, { ChangeEventHandler } from "react";
+"use client";
+
+import { ChangeEventHandler } from "react";
 
 type Option = {
   value: string;

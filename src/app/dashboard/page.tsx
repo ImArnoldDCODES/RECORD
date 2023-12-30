@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { promises as fs } from "fs";
 
-export default async function Index() {
+const Index = async () => {
   const file = await fs.readFile(
     process.cwd() + "/src/utils/tech.json",
     "utf8"
@@ -35,4 +35,6 @@ export default async function Index() {
       </div>
     </main>
   );
-}
+};
+
+export default Index;

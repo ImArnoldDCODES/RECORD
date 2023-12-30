@@ -41,7 +41,7 @@ export default function Index() {
   };
 
   const handleCopyClick = () => {
-    navigator.clipboard.writeText(value ? value : "");
+    navigator.clipboard.writeText(value ?? "");
     setBtnText("Copied");
 
     setTimeout(() => {
