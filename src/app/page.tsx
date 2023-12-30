@@ -1,6 +1,5 @@
 /* eslint-disable react/no-unescaped-entities */
-import Image from "next/image";
-import { NavBar, Footer } from "@/components/index";
+import { NavBar } from "@/components/index";
 
 export default function Home() {
   return (
@@ -14,7 +13,8 @@ export default function Home() {
             <h1 className="uppercase ml-auto w-fit  mt-[-8%]">Share</h1>
             <p className="font-montserrat w-[16rem] absolute top-[70%] text-lg">
               {/* Record, Import and share audio as urls to anyone anywhere */}
-              Use Audio and Text to make magic. With rcord you get to use technologies like, TTS
+              Use Audio and Text to make magic. With rcord you get to use
+              technologies like, TTS
             </p>
           </div>
           <div className="w-[100%] h-fit mb-auto mx-auto  lg:hidden block">

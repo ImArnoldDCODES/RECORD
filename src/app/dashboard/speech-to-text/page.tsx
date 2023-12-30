@@ -1,8 +1,8 @@
 "use client";
 
-import React, { useState, useRef, ChangeEvent } from "react";
 import { axios } from "@/utils";
 import FormData from "form-data";
+import { ChangeEvent, useRef, useState } from "react";
 
 export default function Index() {
   const [code, setCode] = useState<string>();
